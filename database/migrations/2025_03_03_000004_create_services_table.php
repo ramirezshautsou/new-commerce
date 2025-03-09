@@ -24,7 +24,7 @@ class CreateServicesTable extends Migration
 
            $table->bigInteger('type_id')->unsigned()->index();
            $table->date('target_date');
-           $table->decimal('price', 10, 2)->unsigned();
+           $table->decimal('price', 10, 2)->unsigned()->nullable();
 
            $table->foreign('type_id')->references('id')->on('service_types');
 

@@ -26,10 +26,10 @@ class CreateProductsTable extends Migration
             $table->bigInteger('category_id')->unsigned()->index();
             $table->string('name', 255);
             $table->string('alias', 255)->unique();
-            $table->string('description')->nullable();
-            $table->bigInteger('producer_id')->unsigned();
-            $table->date('production_date');
-            $table->decimal('price', 10, 2)->unsigned();
+            $table->text('description')->nullable();
+            $table->bigInteger('producer_id')->unsigned()->index();
+            $table->date('production_date')->nullable();
+            $table->decimal('price', 10, 2)->unsigned()->nullable();
 
             $table->foreign('category_id')->references('id')->on('categories');
             $table->foreign('producer_id')->references('id')->on('producers');
