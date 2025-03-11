@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Producer;
 use App\Repositories\ProductRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,7 +35,10 @@ class ProductController extends Controller
      */
     public function create(): View
     {
-        return view('products.create');
+        return view('products.create', [
+            'categories' => Category::all(),
+            'producers' => Producer::all(),
+        ]);
     }
 
     /**
@@ -41,7 +46,15 @@ class ProductController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $product = $this->productRepository->create($request->all());
+        $product = $this->productRepository->create($request->only([
+            'category_id',
+            'name',
+            'alias',
+            'description',
+            'producer_id',
+            'production_date',
+            'price'
+        ]));
         return redirect(route('products.index'));
     }
 
@@ -58,17 +71,36 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(int $id): View
+    public function edit($id): View
     {
-        //
+        $product = $this->productRepository->findById($id); // Получаем продукт по id
+        $categories = Category::all(); // Получаем все категории
+        $producers = Producer::all(); // Получаем всех производителей
+
+        return view('products.edit', compact('product', 'categories', 'producers'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, int $id): RedirectResponse
     {
-        //
+        $product = $this->productRepository->findById($id);
+
+        $validatedData = $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'name' => 'required|string|max:255',
+            'alias' => 'required|string|max:255|unique:products,alias,' . $id,
+            'description' => 'nullable|string',
+            'producer_id' => 'required|exists:producers,id',
+            'production_date' => 'nullable|date',
+            'price' => 'nullable|numeric|min:0',
+        ]);
+
+        $product->update($validatedData);
+
+        return redirect(route('products.index'))->with('success', 'Product updated successfully');
     }
 
     /**
@@ -76,6 +108,9 @@ class ProductController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
-        //
+        $product = $this->productRepository->findById($id);
+        $product->delete();
+
+        return redirect(route('products.index'))->with('success', 'Product deleted successfully');
     }
 }

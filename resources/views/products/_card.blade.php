@@ -6,8 +6,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                     <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-outline-secondary">View</a>
-                    <a href="#" class="btn btn-sm btn-outline-secondary">Edit</a>
-                    <a href="#" class="btn btn-sm btn-outline-secondary">Delete</a>
+                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
                 </div>
                 <small class="text-body-secondary">{{ $product->price }} BYN</small>
             </div>
