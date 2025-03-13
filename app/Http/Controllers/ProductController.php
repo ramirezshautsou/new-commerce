@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Producer;
+use App\Repositories\CategoryRepository;
+use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
-use App\Repositories\Interfaces\RepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -15,13 +16,13 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     protected ProductRepositoryInterface $productRepository;
-    protected RepositoryInterface $repository;
+    protected CategoryRepositoryInterface $categoryRepository;
     private const PAGE_LIMIT = 15;
 
-    public function __construct(ProductRepositoryInterface $productRepository, RepositoryInterface $repository)
+    public function __construct(ProductRepositoryInterface $productRepository, CategoryRepository $categoryRepository)
     {
         $this->productRepository = $productRepository;
-        $this->repository = $repository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     public function index(): View
@@ -38,7 +39,7 @@ class ProductController extends Controller
     public function create(): View
     {
         return view('products.create', [
-            'categories' => $this->repository->getAll(),
+            'categories' => $this->productRepository->getAll(),
             'producers' => Producer::all(),
         ]);
     }
@@ -48,7 +49,7 @@ class ProductController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $product = $this->repository->create($request->only([
+        $product = $this->productRepository->create($request->only([
             'category_id',
             'name',
             'alias',
@@ -65,7 +66,7 @@ class ProductController extends Controller
      */
     public function show(int $id): View
     {
-        $product = $this->repository->findById($id);
+        $product = $this->productRepository->findById($id);
 
         return view('products.show', compact('product'));
     }
@@ -75,8 +76,8 @@ class ProductController extends Controller
      */
     public function edit(int $id): View
     {
-        $product = $this->repository->findById($id);
-        $categories = $this->repository->getAll();
+        $product = $this->productRepository->findById($id);
+        $categories = $this->categoryRepository->getAll();
         $producers = Producer::all();
 
         return view('products.edit', compact('product', 'categories', 'producers'));
@@ -88,7 +89,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, int $id): RedirectResponse
     {
-        $product = $this->repository->findById($id);
+        $product = $this->productRepository->findById($id);
 
         $validatedData = $request->validate([
             'category_id' => 'required|exists:categories,id',
@@ -110,7 +111,7 @@ class ProductController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
-        $product = $this->repository->findById($id);
+        $product = $this->productRepository->findById($id);
         $product->delete();
 
         return redirect(route('products.index'))->with('success', 'Product deleted successfully');

@@ -3,7 +3,7 @@
 @section('title', 'Add product')
 
 @section('content')
-    <div class="container">
+    <div class="container mt-5">
         <h2>Create new product</h2>
         <form action="{{ route('products.store') }}" method="POST">
             @csrf
@@ -11,7 +11,7 @@
                 <label for="category_id" class="form-label">Category</label>
                 <select class="form-control" id="category_id" name="category_id" required>
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        <option value="{{ $product->category_id}}">{{ $category->name }}</option>
                     @endforeach
                 </select>
             </div>
