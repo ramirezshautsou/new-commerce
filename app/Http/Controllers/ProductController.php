@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Producer;
-use App\Repositories\ProductRepositoryInterface;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
+use App\Repositories\Interfaces\RepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -15,11 +15,13 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     protected ProductRepositoryInterface $productRepository;
+    protected RepositoryInterface $repository;
     private const PAGE_LIMIT = 15;
 
-    public function __construct(ProductRepositoryInterface $productRepository)
+    public function __construct(ProductRepositoryInterface $productRepository, RepositoryInterface $repository)
     {
         $this->productRepository = $productRepository;
+        $this->repository = $repository;
     }
 
     public function index(): View
@@ -36,7 +38,7 @@ class ProductController extends Controller
     public function create(): View
     {
         return view('products.create', [
-            'categories' => Category::all(),
+            'categories' => $this->repository->getAll(),
             'producers' => Producer::all(),
         ]);
     }
@@ -46,7 +48,7 @@ class ProductController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $product = $this->productRepository->create($request->only([
+        $product = $this->repository->create($request->only([
             'category_id',
             'name',
             'alias',
@@ -63,7 +65,7 @@ class ProductController extends Controller
      */
     public function show(int $id): View
     {
-        $product = $this->productRepository->findById($id);
+        $product = $this->repository->findById($id);
 
         return view('products.show', compact('product'));
     }
@@ -71,11 +73,11 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id): View
+    public function edit(int $id): View
     {
-        $product = $this->productRepository->findById($id); // Получаем продукт по id
-        $categories = Category::all(); // Получаем все категории
-        $producers = Producer::all(); // Получаем всех производителей
+        $product = $this->repository->findById($id);
+        $categories = $this->repository->getAll();
+        $producers = Producer::all();
 
         return view('products.edit', compact('product', 'categories', 'producers'));
     }
@@ -86,7 +88,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, int $id): RedirectResponse
     {
-        $product = $this->productRepository->findById($id);
+        $product = $this->repository->findById($id);
 
         $validatedData = $request->validate([
             'category_id' => 'required|exists:categories,id',
@@ -108,7 +110,7 @@ class ProductController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
-        $product = $this->productRepository->findById($id);
+        $product = $this->repository->findById($id);
         $product->delete();
 
         return redirect(route('products.index'))->with('success', 'Product deleted successfully');
