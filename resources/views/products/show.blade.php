@@ -5,8 +5,10 @@
 @section('content')
     <section class="mt-7 py-5 container">
         <h1>Product: "{{$product->name}}"</h1>
-        <p>Описание: {{$product->description}}</p>
-        <p>Цена: {{$product->price}}</p>
+        <p>Category of product: {{$product->category->name}}</p>
+        <p>Producer: {{$product->producer->name}}</p>
+        <p>Description: {{$product->description}}</p>
+        <p>Price: {{$product->price}}</p>
 
         <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
             @csrf

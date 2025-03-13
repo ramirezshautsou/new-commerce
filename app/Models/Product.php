@@ -11,6 +11,9 @@ class Product extends Model
 {
     use HasFactory;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'category_id',
         'name',
@@ -21,16 +24,25 @@ class Product extends Model
         'price',
     ];
 
+    /**
+     * @return BelongsTo
+     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function producer(): BelongsTo
     {
         return $this->belongsTo(Producer::class);
     }
 
+    /**
+     * @return BelongsToMany
+     */
     public function services(): BelongsToMany
     {
         return $this->belongsToMany(Service::class, 'product_services');

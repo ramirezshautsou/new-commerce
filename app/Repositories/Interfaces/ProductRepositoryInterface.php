@@ -2,7 +2,13 @@
 
 namespace App\Repositories\Interfaces;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+
 interface ProductRepositoryInterface
 {
-    public function paginate(int $limitPerPage);
+    /**
+     * @param int $limitPerPage
+     * @return LengthAwarePaginator
+     */
+    public function paginate(int $limitPerPage): LengthAwarePaginator;
 }

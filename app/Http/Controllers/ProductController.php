@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Producer;
 use App\Repositories\CategoryRepository;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use App\Repositories\Interfaces\ProducerRepositoryInterface;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,18 +13,40 @@ use Illuminate\View\View;
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @var ProductRepositoryInterface
      */
     protected ProductRepositoryInterface $productRepository;
+
+    /**
+     * @var CategoryRepositoryInterface
+     */
     protected CategoryRepositoryInterface $categoryRepository;
+
+    /**
+     * @var ProducerRepositoryInterface
+     */
+    protected ProducerRepositoryInterface $producerRepository;
+
+    /**
+     *
+     */
     private const PAGE_LIMIT = 15;
 
-    public function __construct(ProductRepositoryInterface $productRepository, CategoryRepository $categoryRepository)
+    /**
+     * @param ProductRepositoryInterface $productRepository
+     * @param CategoryRepositoryInterface $categoryRepository
+     * @param ProducerRepositoryInterface $producerRepository
+     */
+    public function __construct(ProductRepositoryInterface $productRepository, CategoryRepositoryInterface $categoryRepository, ProducerRepositoryInterface $producerRepository)
     {
         $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->producerRepository = $producerRepository;
     }
 
+    /**
+     * @return View
+     */
     public function index(): View
     {
         $products = $this->productRepository->paginate(self::PAGE_LIMIT);
@@ -33,19 +55,19 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
+     * @return View
      */
     public function create(): View
     {
         return view('products.create', [
             'categories' => $this->productRepository->getAll(),
-            'producers' => Producer::all(),
+            'producers' => $this->producerRepository->getAll(),
         ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function store(Request $request): RedirectResponse
     {
@@ -62,7 +84,8 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @param int $id
+     * @return View
      */
     public function show(int $id): View
     {
@@ -72,20 +95,22 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * @param int $id
+     * @return View
      */
     public function edit(int $id): View
     {
         $product = $this->productRepository->findById($id);
         $categories = $this->categoryRepository->getAll();
-        $producers = Producer::all();
+        $producers = $this->producerRepository->getAll();
 
         return view('products.edit', compact('product', 'categories', 'producers'));
     }
 
-
     /**
-     * Update the specified resource in storage.
+     * @param Request $request
+     * @param int $id
+     * @return RedirectResponse
      */
     public function update(Request $request, int $id): RedirectResponse
     {
@@ -107,7 +132,8 @@ class ProductController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param int $id
+     * @return RedirectResponse
      */
     public function destroy(int $id): RedirectResponse
     {

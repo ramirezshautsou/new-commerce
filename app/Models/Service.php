@@ -11,11 +11,17 @@ class Service extends Model
 {
     use HasFactory;
 
+    /**
+     * @return BelongsTo
+     */
     public function serviceType(): BelongsTo
     {
         return $this->belongsTo(ServiceType::class);
     }
 
+    /**
+     * @return BelongsToMany
+     */
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'product_services');

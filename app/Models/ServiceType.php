@@ -10,6 +10,9 @@ class ServiceType extends Model
 {
     use HasFactory;
 
+    /**
+     * @return HasMany
+     */
     public function services(): HasMany
     {
         return $this->hasMany(Service::class);
