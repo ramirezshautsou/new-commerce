@@ -9,6 +9,8 @@
                 <a href="{{ route('products.index') }}" class="btn btn-primary">Check all products</a>
                 <a href="{{ route('categories.index') }}" class="btn btn-primary">Check all categories</a>
                 <a href="{{ route('producers.index') }}" class="btn btn-primary">Check all producers</a>
+                <a href="{{ route('services.index') }}" class="btn btn-primary">Check all services</a>
+                <a href="{{ route('service-types.index') }}" class="btn btn-primary">Check all service types</a>
             </div>
     </section>
 @endsection

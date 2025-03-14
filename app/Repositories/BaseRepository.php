@@ -2,8 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Interfaces\CategoryRepositoryInterface;
-use App\Repositories\Interfaces\RepositoryInterface;
+use App\Repositories\BaseInterfaces\RepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -32,6 +31,7 @@ abstract class BaseRepository implements RepositoryInterface
 
     /**
      * @param int $id
+     *
      * @return Model
      */
     public function findById(int $id): Model
@@ -41,6 +41,7 @@ abstract class BaseRepository implements RepositoryInterface
 
     /**
      * @param array $data
+     *
      * @return Model
      */
     public function create(array $data): Model
@@ -51,6 +52,7 @@ abstract class BaseRepository implements RepositoryInterface
     /**
      * @param int $id
      * @param array $data
+     *
      * @return Model
      */
     public function update(int $id, array $data): Model
@@ -62,6 +64,7 @@ abstract class BaseRepository implements RepositoryInterface
 
     /**
      * @param int $id
+     *
      * @return bool
      */
     public function delete(int $id): bool

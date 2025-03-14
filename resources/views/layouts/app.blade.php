@@ -8,6 +8,13 @@
 
 @include('layouts.footer')
 
+@if(session('success'))
+    <script>
+        console.log("{{ session('success') }}");
+    </script>
+@endif
+
+
 <script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>
 
 </body>

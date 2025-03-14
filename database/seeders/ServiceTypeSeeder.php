@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\ServiceType;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Services\ServiceType;
 use Illuminate\Database\Seeder;
 
 class ServiceTypeSeeder extends Seeder

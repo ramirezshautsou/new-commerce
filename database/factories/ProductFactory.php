@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Category;
-use App\Models\Producer;
-use App\Models\Product;
+use App\Models\Products\Category;
+use App\Models\Products\Producer;
+use App\Models\Products\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Products\Product>
  */
 class ProductFactory extends Factory
 {

@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Producer;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Products\Producer;
 use Illuminate\Database\Seeder;
 
 class ProducerSeeder extends Seeder

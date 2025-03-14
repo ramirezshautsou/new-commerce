@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Service;
-use App\Models\ServiceType;
+use App\Models\Services\Service;
+use App\Models\Services\ServiceType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Service>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Services\Service>
  */
 class ServiceFactory extends Factory
 {

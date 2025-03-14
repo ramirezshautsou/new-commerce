@@ -12,6 +12,6 @@
         @endforeach
     </section>
     <div class="d-flex justify-content-center mt-4">
-        {{ $products->links('pagination::bootstrap-5') }}
+        {{ $products->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
     </div>
 @endsection

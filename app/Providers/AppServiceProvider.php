@@ -2,12 +2,16 @@
 
 namespace App\Providers;
 
-use App\Repositories\CategoryRepository;
-use App\Repositories\Interfaces\CategoryRepositoryInterface;
-use App\Repositories\Interfaces\ProducerRepositoryInterface;
-use App\Repositories\Interfaces\ProductRepositoryInterface;
-use App\Repositories\ProducerRepository;
-use App\Repositories\ProductRepository;
+use App\Repositories\Product\CategoryRepository;
+use App\Repositories\Product\Interfaces\CategoryRepositoryInterface;
+use App\Repositories\Product\Interfaces\ProducerRepositoryInterface;
+use App\Repositories\Product\Interfaces\ProductRepositoryInterface;
+use App\Repositories\Product\ProducerRepository;
+use App\Repositories\Product\ProductRepository;
+use App\Repositories\Service\Interfaces\ServiceRepositoryInterface;
+use App\Repositories\Service\Interfaces\ServiceTypeRepositoryInterface;
+use App\Repositories\Service\ServiceRepository;
+use App\Repositories\Service\ServiceTypeRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
 
         $this->app->bind(ProducerRepositoryInterface::class, ProducerRepository::class);
+
+        $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
+
+        $this->app->bind(ServiceTypeRepositoryInterface::class, ServiceTypeRepository::class);
     }
 
     /**
