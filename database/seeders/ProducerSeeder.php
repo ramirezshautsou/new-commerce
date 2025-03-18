@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Products\Producer;
+use App\Models\Producer;
 use Illuminate\Database\Seeder;
 
 class ProducerSeeder extends Seeder

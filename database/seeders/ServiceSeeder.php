@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Services\Service;
+use App\Models\Service;
 use Illuminate\Database\Seeder;
 
 class ServiceSeeder extends Seeder

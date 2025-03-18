@@ -2,12 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\Services\Service;
-use App\Models\Services\ServiceType;
+use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Services\Service>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Service>
  */
 class ServiceFactory extends Factory
 {
@@ -21,7 +20,8 @@ class ServiceFactory extends Factory
     public function definition(): array
     {
         return [
-            'type_id' => ServiceType::query()->inRandomOrder()->first()?->id,
+            'name' => $this->faker->word,
+            'alias' => $this->faker->slug,
             'target_date' => $this->faker->date(),
             'price' => $this->faker->randomFloat(2, 50, 1000),
         ];
