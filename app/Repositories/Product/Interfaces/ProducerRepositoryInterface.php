@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Product\Interfaces;
 
-use App\Models\Products\Producer;
+use App\Models\Producer;
 
 interface ProducerRepositoryInterface
 {

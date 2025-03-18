@@ -57,9 +57,10 @@ abstract class BaseRepository implements RepositoryInterface
      */
     public function update(int $id, array $data): Model
     {
-        $product = $this->model->query()->findOrFail($id);
-        $product->update($data);
-        return $product;
+        $item = $this->model->query()->findOrFail($id);
+        $item->update($data);
+
+        return $item;
     }
 
     /**

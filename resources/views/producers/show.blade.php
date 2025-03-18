@@ -20,7 +20,9 @@
         <form action="{{ route('producers.destroy', $producer->id) }}" method="POST" style="display:inline;">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-sm btn-outline-secondary">Delete {{$producer->name}} producer</button>
+            <button type="submit" class="btn btn-sm btn-outline-secondary">
+                Delete {{$producer->name}} producer
+            </button>
         </form>
     </section>
 

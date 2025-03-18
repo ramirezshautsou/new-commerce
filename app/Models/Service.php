@@ -1,24 +1,21 @@
 <?php
 
-namespace App\Models\Services;
+namespace App\Models;
 
-use App\Models\Products\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Service extends Model
 {
     use HasFactory;
 
-    /**
-     * @return BelongsTo
-     */
-    public function serviceType(): BelongsTo
-    {
-        return $this->belongsTo(ServiceType::class);
-    }
+    protected $fillable = [
+        'name',
+        'alias',
+        'target_date',
+        'price',
+    ];
 
     /**
      * @return BelongsToMany

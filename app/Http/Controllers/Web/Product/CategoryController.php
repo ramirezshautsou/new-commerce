@@ -7,21 +7,12 @@ use App\Http\Requests\CategoryRequest;
 use App\Http\Requests\ProducerRequest;
 use App\Repositories\Product\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Product\Interfaces\ProductRepositoryInterface;
+use App\Services\CategoryService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
-    /**
-     * @var ProductRepositoryInterface
-     */
-    protected ProductRepositoryInterface $productRepository;
-
-    /**
-     * @var CategoryRepositoryInterface
-     */
-    protected CategoryRepositoryInterface $categoryRepository;
-
     /**
      * @var string $name
      */
@@ -30,24 +21,25 @@ class CategoryController extends Controller
     /**
      * @param ProductRepositoryInterface $productRepository
      * @param CategoryRepositoryInterface $categoryRepository
+     * @param CategoryService $categoryService
      */
     public function __construct(
-        ProductRepositoryInterface $productRepository,
-        CategoryRepositoryInterface $categoryRepository
-    ) {
-        $this->productRepository = $productRepository;
-        $this->categoryRepository = $categoryRepository;
+        protected ProductRepositoryInterface  $productRepository,
+        protected CategoryRepositoryInterface $categoryRepository,
+        protected CategoryService             $categoryService,
+    )
+    {
         $this->name = __('entities.category');
     }
 
     /**
      * @return View
      */
-
     public function index(): View
     {
         return view('categories.index', [
-            'categories' => $this->categoryRepository->getAll()
+            'categories' => $this->categoryRepository
+                ->getAll(),
         ]);
     }
 
@@ -58,9 +50,10 @@ class CategoryController extends Controller
      */
     public function show(int $categoryId): View
     {
-        $category = $this->categoryRepository->getProductsByCategory($categoryId);
-
-        return view('categories.show', compact('category'));
+        return view('categories.show', [
+            'category' => $this->categoryRepository
+                ->getProductsByCategory($categoryId),
+        ]);
     }
 
     /**
@@ -68,9 +61,10 @@ class CategoryController extends Controller
      */
     public function create(): View
     {
-        $categories = $this->categoryRepository->getAll();
-
-        return view('categories.create', compact('categories'));
+        return view('categories.create', [
+            'categories' => $this->categoryRepository
+                ->getAll(),
+        ]);
     }
 
     /**
@@ -80,9 +74,7 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request): RedirectResponse
     {
-        $validatedData = $request->validated();
-
-        $this->categoryRepository->create($validatedData);
+        $this->categoryRepository->create($request->validated());
 
         return redirect(route('categories.index'))
             ->with('success', __('messages.created_success', [
@@ -97,9 +89,9 @@ class CategoryController extends Controller
      */
     public function edit(int $categoryId): View
     {
-        $category = $this->categoryRepository->findById($categoryId);
-
-        return view('categories.edit', compact('category'));
+        return view('categories.edit', [
+            'category' => $this->categoryRepository->findById($categoryId),
+        ]);
     }
 
     /**
@@ -110,11 +102,7 @@ class CategoryController extends Controller
      */
     public function update(ProducerRequest $request, int $categoryId): RedirectResponse
     {
-        $category = $this->categoryRepository->findById($categoryId);
-
-        $validatedData = $request->validated();
-
-        $category->update($validatedData);
+        $this->categoryService->updateCategory($request, $categoryId);
 
         return redirect(route('categories.index'))
             ->with('success', __('messages.updated_success', [

@@ -3,7 +3,7 @@
 @section('title', 'Edit ' . $product->name . ' product')
 
 @section('content')
-    <div class="container">
+    <div class="container my-5">
         <h2>Edit product</h2>
         <form action="{{ route('products.update', $product->id) }}" method="POST">
             @csrf
@@ -59,7 +59,8 @@
 
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" id="description" name="description">{{ old('description', $product->description) }}</textarea>
+                <textarea class="form-control" id="description"
+                          name="description">{{ old('description', $product->description) }}</textarea>
             </div>
 
             <button type="submit" class="btn btn-primary">Update product</button>

@@ -11,24 +11,15 @@ class CreateServicesTable extends Migration
      */
     public function up(): void
     {
-        Schema::create('service_types', function (Blueprint $table) {
+        Schema::create('services', function (Blueprint $table) {
             $table->id();
 
             $table->string('name', 255);
+            $table->string('alias', 255)->unique();
+            $table->date('target_date')->nullable();
+            $table->decimal('price', 10, 2)->unsigned()->nullable();
 
             $table->timestamps();
-        });
-
-        Schema::create('services', function (Blueprint $table) {
-           $table->id();
-
-           $table->bigInteger('type_id')->unsigned()->index();
-           $table->date('target_date');
-           $table->decimal('price', 10, 2)->unsigned()->nullable();
-
-           $table->foreign('type_id')->references('id')->on('service_types');
-
-           $table->timestamps();
         });
     }
 
@@ -37,11 +28,8 @@ class CreateServicesTable extends Migration
      */
     public function down(): void
     {
-        Schema::table('services', function (Blueprint $table) {
-            $table->dropForeign(['type_id']);
-        });
-
-        Schema::dropIfExists('service_types');
         Schema::dropIfExists('services');
     }
-};
+}
+
+;

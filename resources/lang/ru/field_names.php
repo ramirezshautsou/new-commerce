@@ -7,5 +7,6 @@ return [
     'description' => 'Описание',
     'producer_id' => 'Производитель',
     'production_date' => 'Дата производства',
+    'target_date' => 'Дата доставки',
     'price' => 'Цена',
 ];

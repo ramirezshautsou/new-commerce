@@ -35,4 +35,6 @@ class CreateProductServicesTable extends Migration
 
         Schema::dropIfExists('product_services');
     }
-};
+}
+
+;

@@ -11,16 +11,6 @@ use Illuminate\View\View;
 class ProducerController extends Controller
 {
     /**
-     * @var ProducerRepositoryInterface
-     */
-    protected ProducerRepositoryInterface $productRepository;
-    /**
-     * @var ProducerRepositoryInterface
-     */
-
-    protected ProducerRepositoryInterface $producerRepository;
-
-    /**
      * @var string $name
      */
     protected string $name;
@@ -30,11 +20,10 @@ class ProducerController extends Controller
      * @param ProducerRepositoryInterface $productRepository
      */
     public function __construct(
-        ProducerRepositoryInterface $producerRepository,
-        ProducerRepositoryInterface $productRepository
-    ) {
-        $this->productRepository = $productRepository;
-        $this->producerRepository = $producerRepository;
+        protected ProducerRepositoryInterface $producerRepository,
+        protected ProducerRepositoryInterface $productRepository,
+    )
+    {
         $this->name = __('entities.producer');
     }
 
@@ -43,9 +32,10 @@ class ProducerController extends Controller
      */
     public function index(): View
     {
-        $producers = $this->producerRepository->getAll();
-
-        return view('producers.index', compact('producers'));
+        return view('producers.index', [
+            'producers' => $this->producerRepository
+                ->getAll(),
+        ]);
     }
 
     /**
@@ -55,9 +45,10 @@ class ProducerController extends Controller
      */
     public function show(int $producerId): View
     {
-        $producer = $this->producerRepository->getProductByProducer($producerId);
-
-        return view('producers.show', compact('producer'));
+        return view('producers.show', [
+            'producer' => $this->producerRepository
+                ->getProductByProducer($producerId),
+        ]);
     }
 
     /**
@@ -65,9 +56,10 @@ class ProducerController extends Controller
      */
     public function create(): View
     {
-        $producers = $this->producerRepository->getAll();
-
-        return view('producers.create', compact('producers'));
+        return view('producers.create', [
+            'producers' => $this->producerRepository
+                ->getAll(),
+        ]);
     }
 
     /**
@@ -77,9 +69,7 @@ class ProducerController extends Controller
      */
     public function store(ProducerRequest $request): RedirectResponse
     {
-        $validatedData = $request->validated();
-
-        $this->producerRepository->create($validatedData);
+        $this->producerRepository->create($request->validated());
 
         return redirect(route('producers.index'))
             ->with('success', __('messages.created_success', [
@@ -94,9 +84,10 @@ class ProducerController extends Controller
      */
     public function edit(int $producerId): View
     {
-        $producer = $this->producerRepository->findById($producerId);
-
-        return view('producers.edit', compact('producer'));
+        return view('producers.edit', [
+            'producer' => $this->producerRepository
+                ->findById($producerId),
+        ]);
     }
 
     /**
@@ -109,9 +100,7 @@ class ProducerController extends Controller
     {
         $producer = $this->producerRepository->findById($producerId);
 
-        $validatedData = $request->validated();
-
-        $producer->update($validatedData);
+        $producer->update($request->validated());
 
         return redirect(route('producers.index'))
             ->with('success', __('messages.updated_success', [

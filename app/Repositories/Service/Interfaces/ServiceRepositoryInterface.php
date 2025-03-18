@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Service\Interfaces;
 
+use App\Models\Service;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface ServiceRepositoryInterface

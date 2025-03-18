@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\View\View;
 
-class HomePageController extends Controller
+class HomeController extends Controller
 {
     /**
      * @return View

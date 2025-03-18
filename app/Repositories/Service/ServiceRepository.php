@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Service;
 
-use App\Models\Services\Service;
+use App\Models\Service;
 use App\Repositories\BaseRepository;
 use App\Repositories\Service\Interfaces\ServiceRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;

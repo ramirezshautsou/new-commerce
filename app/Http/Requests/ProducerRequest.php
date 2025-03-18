@@ -19,11 +19,9 @@ class ProducerRequest extends FormRequest
      */
     public function rules(): array
     {
-        $producerId = $this->route('producer');
-
         return [
             'name' => 'required|string|max:255',
-            'alias' => 'required|string|max:255|unique:categories,alias,' . $producerId,
+            'alias' => 'required|string|max:255|unique:producers,alias,' . $this->route('producer'),
         ];
     }
 
@@ -33,14 +31,35 @@ class ProducerRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => __('messages.name_required', ['attribute' => __('field_names.name')]),
-            'name.string' => __('messages.name_string', ['attribute' => __('field_names.name')]),
-            'name.max' => __('messages.name_max', ['attribute' => __('field_names.name')]),
+            'name.required' => __(
+                'messages.name_required', [
+                'attribute' => __('field_names.name',
+                )]),
+            'name.string' => __(
+                'messages.name_string', [
+                'attribute' => __('field_names.name',
+                )]),
+            'name.max' => __(
+                'messages.name_max', [
+                'attribute' => __('field_names.name',
+                )]),
 
-            'alias.required' => __('messages.alias_required', ['attribute' => __('field_names.alias')]),
-            'alias.string' => __('messages.alias_string', ['attribute' => __('field_names.alias')]),
-            'alias.max' => __('messages.alias_max', ['attribute' => __('field_names.alias')]),
-            'alias.unique' => __('messages.alias_unique', ['attribute' => __('field_names.alias')]),
+            'alias.required' => __(
+                'messages.alias_required', [
+                'attribute' => __('field_names.alias',
+                )]),
+            'alias.string' => __(
+                'messages.alias_string', [
+                'attribute' => __('field_names.alias',
+                )]),
+            'alias.max' => __(
+                'messages.alias_max', [
+                'attribute' => __('field_names.alias',
+                )]),
+            'alias.unique' => __(
+                'messages.alias_unique', [
+                'attribute' => __('field_names.alias',
+                )]),
         ];
     }
 }

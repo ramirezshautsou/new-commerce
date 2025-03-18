@@ -7,26 +7,12 @@ use App\Http\Requests\ProductRequest;
 use App\Repositories\Product\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Product\Interfaces\ProducerRepositoryInterface;
 use App\Repositories\Product\Interfaces\ProductRepositoryInterface;
+use App\Repositories\Service\Interfaces\ServiceRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-    /**
-     * @var ProductRepositoryInterface
-     */
-    protected ProductRepositoryInterface $productRepository;
-
-    /**
-     * @var CategoryRepositoryInterface
-     */
-    protected CategoryRepositoryInterface $categoryRepository;
-
-    /**
-     * @var ProducerRepositoryInterface
-     */
-    protected ProducerRepositoryInterface $producerRepository;
-
     /**
      * @const PAGE_LIMIT
      */
@@ -43,13 +29,12 @@ class ProductController extends Controller
      * @param ProducerRepositoryInterface $producerRepository
      */
     public function __construct(
-        ProductRepositoryInterface $productRepository,
-        CategoryRepositoryInterface $categoryRepository,
-        ProducerRepositoryInterface $producerRepository
-    ) {
-        $this->productRepository = $productRepository;
-        $this->categoryRepository = $categoryRepository;
-        $this->producerRepository = $producerRepository;
+        protected ProductRepositoryInterface  $productRepository,
+        protected CategoryRepositoryInterface $categoryRepository,
+        protected ProducerRepositoryInterface $producerRepository,
+        protected ServiceRepositoryInterface $serviceRepository,
+    )
+    {
         $this->name = __('entities.product');
     }
 
@@ -58,9 +43,10 @@ class ProductController extends Controller
      */
     public function index(): View
     {
-        $products = $this->productRepository->paginate(self::PAGE_LIMIT);
-
-        return view('products.index', compact('products'));
+        return view('products.index', [
+            'products' => $this->productRepository
+                ->paginate(self::PAGE_LIMIT,
+                )]);
     }
 
     /**
@@ -81,9 +67,8 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request): RedirectResponse
     {
-        $validatedData = $request->validated();
 
-        $this->productRepository->create($validatedData);
+        $this->productRepository->create($request->validated());
 
         return redirect(route('products.index'))
             ->with('success', __('messages.created_success', [
@@ -98,9 +83,12 @@ class ProductController extends Controller
      */
     public function show(int $productId): View
     {
-        $product = $this->productRepository->findById($productId);
-
-        return view('products.show', compact('product'));
+        return view('products.show', [
+            'product' => $this->productRepository
+                ->findById($productId),
+            'services' => $this->serviceRepository
+                ->getAll(),
+        ]);
     }
 
     /**
@@ -110,11 +98,11 @@ class ProductController extends Controller
      */
     public function edit(int $productId): View
     {
-        $product = $this->productRepository->findById($productId);
-        $categories = $this->categoryRepository->getAll();
-        $producers = $this->producerRepository->getAll();
-
-        return view('products.edit', compact('product', 'categories', 'producers'));
+        return view('products.edit', [
+            'product' => $this->productRepository->findById($productId),
+            'categories' => $this->categoryRepository->getAll(),
+            'producers' => $this->producerRepository->getAll(),
+        ]);
     }
 
     /**
@@ -126,11 +114,8 @@ class ProductController extends Controller
     public function update(ProductRequest $request, int $productId): RedirectResponse
     {
         $product = $this->productRepository->findById($productId);
+        $product->update($request->validated());
 
-        $validatedData = $request->validated();
-
-        $product->update($validatedData);
-        // lang
         return redirect(route('products.index'))
             ->with('success', __('messages.updated_success', [
                 'name' => $this->name,

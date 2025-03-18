@@ -4,30 +4,23 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CategoryRequest extends FormRequest
+class ServiceRequest extends FormRequest
 {
-    /**
-     * @return bool
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * @return string[]
-     */
     public function rules(): array
     {
         return [
             'name' => 'required|string|max:255',
-            'alias' => 'required|string|max:255|unique:categories,alias,' . $this->route('category'),
+            'alias' => 'required|string|max:255|unique:services,alias,' . $this->route('service'),
+            'target_date' => 'nullable|date',
+            'price' => 'nullable|numeric|min:0|max:99999999.99',
         ];
     }
 
-    /**
-     * @return array
-     */
     public function messages(): array
     {
         return [
@@ -59,6 +52,20 @@ class CategoryRequest extends FormRequest
             'alias.unique' => __(
                 'messages.alias_unique', [
                 'attribute' => __('field_names.alias',
+                )]),
+
+            'target_date.date' => __(
+                'messages.target_date', [
+                'attribute' => __('field_names.target_date',
+                )]),
+
+            'price.numeric' => __(
+                'messages.price_numeric', [
+                'attribute' => __('field_names.price',
+                )]),
+            'price.min' => __(
+                'messages.price_min', [
+                'attribute' => __('field_names.price',
                 )]),
         ];
     }

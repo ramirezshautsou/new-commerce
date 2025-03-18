@@ -26,6 +26,8 @@ return [
 
     'production_date' => ':attribute должна быть правильной датой.',
 
+    'target_date' => ':attribute должна быть правильной датой.',
+
     'price_numeric' => ':attribute должно быть числом.',
     'price_min' => ':attribute должно быть больше или равно 0.',
 ];

@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Product;
 
-use App\Models\Products\Product;
+use App\Models\Product;
 use App\Repositories\BaseRepository;
 use App\Repositories\Product\Interfaces\ProductRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -24,6 +24,6 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
      */
     public function paginate(int $limitPerPage): LengthAwarePaginator
     {
-        return Product::query()->with('category','producer')->paginate($limitPerPage);
+        return Product::query()->with('category', 'producer')->paginate($limitPerPage);
     }
 }

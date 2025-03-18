@@ -1,9 +1,8 @@
 <?php
 
 return [
-    'product' => 'Product',
-    'service' => 'Service',
-    'service-type' => 'Service type',
-    'category' => 'Category',
-    'producer' => 'Producer',
+    'product' => 'Продукт',
+    'service' => 'Услуга',
+    'category' => 'Категория',
+    'producer' => 'Производитель',
 ];

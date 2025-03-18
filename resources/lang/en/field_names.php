@@ -7,5 +7,6 @@ return [
     'description' => 'Description',
     'producer_id' => 'Producer',
     'production_date' => 'Production Date',
+    'target_date' => 'Target Date',
     'price' => 'Price',
 ];

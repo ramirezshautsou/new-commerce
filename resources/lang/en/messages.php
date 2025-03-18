@@ -26,6 +26,8 @@ return [
 
     'production_date' => ':attribute must be a valid date.',
 
+    'target_date' => ':attribute must be a valid date.',
+
     'price_numeric' => ':attribute must be a number.',
     'price_min' => ':attribute must be at least 0.',
 ];
