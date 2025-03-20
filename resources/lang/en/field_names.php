@@ -2,11 +2,15 @@
 
 return [
     'category_id' => 'Category',
-    'name' => 'Product Name',
-    'alias' => 'Product Alias',
+    'name' => 'Name',
+    'alias' => 'Alias',
     'description' => 'Description',
     'producer_id' => 'Producer',
     'production_date' => 'Production Date',
     'target_date' => 'Target Date',
     'price' => 'Price',
+
+    'email' => 'Email',
+    'password' => 'Password',
+    'role_id' => 'Role',
 ];

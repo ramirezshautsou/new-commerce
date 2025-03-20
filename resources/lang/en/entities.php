@@ -5,4 +5,5 @@ return [
     'service' => 'Service',
     'category' => 'Category',
     'producer' => 'Producer',
+    'user' => 'User',
 ];

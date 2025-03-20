@@ -10,6 +10,7 @@
             <a href="{{ route('categories.index') }}" class="btn btn-primary">Check all categories</a>
             <a href="{{ route('producers.index') }}" class="btn btn-primary">Check all producers</a>
             <a href="{{ route('services.index') }}" class="btn btn-primary">Check all services</a>
+            <a href="{{ route('admin.users.index') }}" class="btn btn-primary">Check all users</a>
         </div>
     </section>
 @endsection

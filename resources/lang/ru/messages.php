@@ -30,4 +30,13 @@ return [
 
     'price_numeric' => ':attribute должно быть числом.',
     'price_min' => ':attribute должно быть больше или равно 0.',
+
+    'email_required' => ':attribute обязательно для заполнения.',
+    'email_invalid' => ':attribute должен быть действительным адресом электронной почты.',
+    'email_unique' => ':attribute уже занят.',
+    'password_required' => ':attribute обязательно для заполнения.',
+    'password_min' => ':attribute должно быть не менее :min символов.',
+    'password_confirmation' => 'Подтверждение :attribute не совпадает.',
+    'role_required' => ':attribute обязательно для заполнения.',
+    'role_exists' => ':attribute не является допустимым.',
 ];

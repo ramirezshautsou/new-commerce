@@ -27,12 +27,13 @@ class ProductController extends Controller
      * @param ProductRepositoryInterface $productRepository
      * @param CategoryRepositoryInterface $categoryRepository
      * @param ProducerRepositoryInterface $producerRepository
+     * @param ServiceRepositoryInterface $serviceRepository
      */
     public function __construct(
         protected ProductRepositoryInterface  $productRepository,
         protected CategoryRepositoryInterface $categoryRepository,
         protected ProducerRepositoryInterface $producerRepository,
-        protected ServiceRepositoryInterface $serviceRepository,
+        protected ServiceRepositoryInterface  $serviceRepository,
     )
     {
         $this->name = __('entities.product');
@@ -45,35 +46,8 @@ class ProductController extends Controller
     {
         return view('products.index', [
             'products' => $this->productRepository
-                ->paginate(self::PAGE_LIMIT,
-                )]);
-    }
-
-    /**
-     * @return View
-     */
-    public function create(): View
-    {
-        return view('products.create', [
-            'categories' => $this->categoryRepository->getAll(),
-            'producers' => $this->producerRepository->getAll(),
+                ->paginate(self::PAGE_LIMIT),
         ]);
-    }
-
-    /**
-     * @param ProductRequest $request
-     *
-     * @return RedirectResponse
-     */
-    public function store(ProductRequest $request): RedirectResponse
-    {
-
-        $this->productRepository->create($request->validated());
-
-        return redirect(route('products.index'))
-            ->with('success', __('messages.created_success', [
-                'name' => $this->name,
-            ]));
     }
 
     /**
@@ -92,6 +66,35 @@ class ProductController extends Controller
     }
 
     /**
+     * @return View
+     */
+    public function create(): View
+    {
+        return view('products.create', [
+            'categories' => $this->categoryRepository
+                ->getAll(),
+            'producers' => $this->producerRepository
+                ->getAll(),
+        ]);
+    }
+
+    /**
+     * @param ProductRequest $request
+     *
+     * @return RedirectResponse
+     */
+    public function store(ProductRequest $request): RedirectResponse
+    {
+        $this->productRepository
+            ->create($request->validated());
+
+        return redirect(route('products.index'))
+            ->with('success', __('messages.created_success', [
+                'name' => $this->name,
+            ]));
+    }
+
+    /**
      * @param int $productId
      *
      * @return View
@@ -99,9 +102,12 @@ class ProductController extends Controller
     public function edit(int $productId): View
     {
         return view('products.edit', [
-            'product' => $this->productRepository->findById($productId),
-            'categories' => $this->categoryRepository->getAll(),
-            'producers' => $this->producerRepository->getAll(),
+            'product' => $this->productRepository
+                ->findById($productId),
+            'categories' => $this->categoryRepository
+                ->getAll(),
+            'producers' => $this->producerRepository
+                ->getAll(),
         ]);
     }
 
@@ -113,7 +119,8 @@ class ProductController extends Controller
      */
     public function update(ProductRequest $request, int $productId): RedirectResponse
     {
-        $product = $this->productRepository->findById($productId);
+        $product = $this->productRepository
+            ->findById($productId);
         $product->update($request->validated());
 
         return redirect(route('products.index'))
@@ -129,7 +136,8 @@ class ProductController extends Controller
      */
     public function destroy(int $productId): RedirectResponse
     {
-        $product = $this->productRepository->findById($productId);
+        $product = $this->productRepository
+            ->findById($productId);
         $product->delete();
 
         return redirect(route('products.index'))

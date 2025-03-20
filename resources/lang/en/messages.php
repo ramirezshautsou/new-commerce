@@ -30,4 +30,13 @@ return [
 
     'price_numeric' => ':attribute must be a number.',
     'price_min' => ':attribute must be at least 0.',
+
+    'email_required' => ':attribute is required.',
+    'email_invalid' => ':attribute must be a valid email address.',
+    'email_unique' => ':attribute has already been taken.',
+    'password_required' => ':attribute is required.',
+    'password_min' => ':attribute must be at least :min characters.',
+    'password_confirmation' => ':attribute confirmation does not match.',
+    'role_required' => ':attribute is required.',
+    'role_exists' => ':attribute is not valid.',
 ];
