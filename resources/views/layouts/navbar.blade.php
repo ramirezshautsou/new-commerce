@@ -96,10 +96,25 @@
             <a href="/" class="navbar-brand d-flex align-items-center">
                 <strong>R. Shautsou E-Commerce Project</strong>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
-                    aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation" id="navbarButton">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <div class="d-flex">
+                <div class="d-flex">
+                    @guest
+                        <a href="{{ route('auth.login') }}" class="navbar-brand align-items-center">Login</a>
+                        <a href="{{ route('auth.registration') }}" class="navbar-brand align-items-center">Registration</a>
+                    @endguest
+
+                @auth
+                    <form method="POST" action="{{ route('auth.logout') }}">
+                        @csrf
+                        <input type="submit" class="navbar-brand align-items-center justify-content-center" value="Выйти">
+                    </form>
+                @endauth
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
+                        aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation" id="navbarButton">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
         </div>
     </div>
 </header>

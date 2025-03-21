@@ -9,6 +9,7 @@ use App\Repositories\Product\Interfaces\ProducerRepositoryInterface;
 use App\Repositories\Product\Interfaces\ProductRepositoryInterface;
 use App\Repositories\Service\Interfaces\ServiceRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ProductController extends Controller
@@ -42,11 +43,17 @@ class ProductController extends Controller
     /**
      * @return View
      */
-    public function index(): View
+    public function index(Request $request): View
     {
+        $sortBy = $request->query('sort_by', 'id');
+        $sortOrder = $request->query('sort_order', 'asc');
+
         return view('products.index', [
             'products' => $this->productRepository
-                ->paginate(self::PAGE_LIMIT),
+                ->sort([
+                    'field' => $sortBy,
+                    'direction' => $sortOrder
+                ]),
         ]);
     }
 

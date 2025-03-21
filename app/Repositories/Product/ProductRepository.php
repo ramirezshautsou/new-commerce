@@ -26,4 +26,20 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     {
         return Product::query()->with('category', 'producer')->paginate($limitPerPage);
     }
+
+    public function sort(array $sortArray): LengthAwarePaginator
+    {
+        $query = Product::query();
+
+        $field = $sortArray['field'] ?? 'name';
+        $direction = $sortArray['direction'] ?? 'asc';
+
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'asc';
+        }
+
+        $query->orderBy($field, $direction);
+
+        return $query->paginate(10);
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Requests\ProducerRequest;
 use App\Repositories\Product\CategoryRepository;
+use Illuminate\Database\Eloquent\Model;
 
 class CategoryService
 {
@@ -11,7 +12,7 @@ class CategoryService
     {
     }
 
-    public function updateCategory(ProducerRequest $request, int $categoryId)
+    public function updateCategory(ProducerRequest $request, int $categoryId): Model
     {
         $category = $this->categoryRepository->findById($categoryId);
 
