@@ -28,12 +28,16 @@
         <button class="btn btn-primary" id="total-price-btn">
             Total Price: {{$product->price}}
         </button>
-
-        <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-sm btn-outline-secondary">Delete {{$product->name}} product</button>
-        </form>
+        @auth
+            @if(auth()->user()?->role->name === 'admin')
+                <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">Delete {{$product->name}}product
+                    </button>
+                </form>
+            @endif
+        @endauth
     </section>
 
     <a href="{{ route('products.index') }}"> Return to all products</a>

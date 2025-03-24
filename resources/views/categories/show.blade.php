@@ -16,12 +16,16 @@
                 </li>
             @endforeach
         </ol>
-
-        <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-sm btn-outline-secondary">Delete {{$category->name}} category</button>
-        </form>
+        @auth
+            @if(auth()->user()?->role->name === 'admin')
+                <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">Delete {{$category->name}}category
+                    </button>
+                </form>
+            @endif
+        @endauth
     </section>
 
     <a href="{{ route('categories.index') }}"> Return to all categories</a>

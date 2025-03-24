@@ -16,14 +16,17 @@
                 </li>
             @endforeach
         </ol>
-
-        <form action="{{ route('producers.destroy', $producer->id) }}" method="POST" style="display:inline;">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-sm btn-outline-secondary">
-                Delete {{$producer->name}} producer
-            </button>
-        </form>
+        @auth
+            @if(auth()->user()?->role->name === 'admin')
+                <form action="{{ route('producers.destroy', $producer->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">
+                        Delete {{$producer->name}} producer
+                    </button>
+                </form>
+            @endif
+        @endauth
     </section>
 
     <a href="{{ route('producers.index') }}"> Return to all producers</a>

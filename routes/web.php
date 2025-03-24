@@ -28,7 +28,6 @@ Route::middleware([Authenticate::class])->group(function () {
         Route::resource('services', ServiceController::class);
     });
 
-
     Route::resource('categories', CategoryController::class);
     Route::resource('producers', ProducerController::class);
 
