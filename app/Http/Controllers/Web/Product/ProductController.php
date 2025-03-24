@@ -45,15 +45,24 @@ class ProductController extends Controller
      */
     public function index(Request $request): View
     {
+        $filters = $request->only(['categories', 'producers', 'price_min', 'price_max']);
+
         $sortBy = $request->query('sort_by', 'id');
         $sortOrder = $request->query('sort_order', 'asc');
 
+        $query = $this->productRepository->filter($filters);
+
         return view('products.index', [
             'products' => $this->productRepository
-                ->sort([
+                ->sort($query, [
                     'field' => $sortBy,
                     'direction' => $sortOrder
-                ]),
+                ])
+                ->paginate(self::PAGE_LIMIT),
+            'categories' => $this->categoryRepository
+                ->getAll(),
+            'producers' => $this->producerRepository
+                ->getAll(),
         ]);
     }
 

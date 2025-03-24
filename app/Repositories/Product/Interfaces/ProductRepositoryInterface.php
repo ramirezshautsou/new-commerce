@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Product\Interfaces;
 
-use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface ProductRepositoryInterface
@@ -13,6 +13,6 @@ interface ProductRepositoryInterface
      * @return LengthAwarePaginator
      */
     public function paginate(int $limitPerPage): LengthAwarePaginator;
-
-    public function sort(array $sortArray): LengthAwarePaginator;
+    public function sort(Builder $query, array $sortArray): Builder;
+    public function filter(array $filterArray): Builder;
 }
