@@ -69,7 +69,8 @@ class ProducerController extends Controller
      */
     public function store(ProducerRequest $request): RedirectResponse
     {
-        $this->producerRepository->create($request->validated());
+        $this->producerRepository
+            ->create($request->validated());
 
         return redirect(route('producers.index'))
             ->with('success', __('messages.created_success', [
@@ -98,8 +99,8 @@ class ProducerController extends Controller
      */
     public function update(ProducerRequest $request, int $producerId): RedirectResponse
     {
-        $producer = $this->producerRepository->findById($producerId);
-
+        $producer = $this->producerRepository
+            ->findById($producerId);
         $producer->update($request->validated());
 
         return redirect(route('producers.index'))
@@ -115,7 +116,8 @@ class ProducerController extends Controller
      */
     public function destroy(int $producerId): RedirectResponse
     {
-        $producer = $this->producerRepository->findById($producerId);
+        $producer = $this->producerRepository
+            ->findById($producerId);
         $producer->delete();
 
         return redirect(route('producers.index'))

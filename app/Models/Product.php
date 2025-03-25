@@ -47,5 +47,4 @@ class Product extends Model
     {
         return $this->belongsToMany(Service::class, 'product_services');
     }
-
 }

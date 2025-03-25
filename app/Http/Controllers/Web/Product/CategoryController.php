@@ -74,7 +74,8 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request): RedirectResponse
     {
-        $this->categoryRepository->create($request->validated());
+        $this->categoryRepository
+            ->create($request->validated());
 
         return redirect(route('categories.index'))
             ->with('success', __('messages.created_success', [
@@ -90,7 +91,8 @@ class CategoryController extends Controller
     public function edit(int $categoryId): View
     {
         return view('categories.edit', [
-            'category' => $this->categoryRepository->findById($categoryId),
+            'category' => $this->categoryRepository
+                ->findById($categoryId),
         ]);
     }
 
@@ -102,7 +104,8 @@ class CategoryController extends Controller
      */
     public function update(ProducerRequest $request, int $categoryId): RedirectResponse
     {
-        $this->categoryService->updateCategory($request, $categoryId);
+        $this->categoryService
+            ->updateCategory($request, $categoryId);
 
         return redirect(route('categories.index'))
             ->with('success', __('messages.updated_success', [
@@ -117,7 +120,8 @@ class CategoryController extends Controller
      */
     public function destroy(int $categoryId): RedirectResponse
     {
-        $category = $this->categoryRepository->findById($categoryId);
+        $category = $this->categoryRepository
+            ->findById($categoryId);
         $category->delete();
 
         return redirect(route('categories.index'))

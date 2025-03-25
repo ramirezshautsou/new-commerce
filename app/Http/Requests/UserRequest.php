@@ -6,11 +6,17 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UserRequest extends FormRequest
 {
+    /**
+     * @return bool
+     */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * @return string[]
+     */
     public function rules(): array
     {
         return [
@@ -21,6 +27,9 @@ class UserRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array
+     */
     public function messages(): array
     {
         return [

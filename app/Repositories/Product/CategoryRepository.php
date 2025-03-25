@@ -23,6 +23,6 @@ class CategoryRepository extends BaseRepository implements CategoryRepositoryInt
      */
     public function getProductsByCategory(int $categoryId): Category
     {
-        return Category::with('products')->findOrFail($categoryId);
+        return $this->model->with('products')->findOrFail($categoryId);
     }
 }

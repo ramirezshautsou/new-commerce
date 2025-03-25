@@ -25,26 +25,16 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
      */
     public function paginate(int $limitPerPage): LengthAwarePaginator
     {
-        return Product::query()->with('category', 'producer')->paginate($limitPerPage);
+        return $this->model->with('category', 'producer')->paginate($limitPerPage);
     }
 
-    public function sort(Builder $query, array $sortArray): Builder
-    {
-        $field = $sortArray['field'] ?? 'name';
-        $direction = $sortArray['direction'] ?? 'asc';
-
-        if (!in_array($direction, ['asc', 'desc'])) {
-            $direction = 'asc';
-        }
-
-        $query->orderBy($field, $direction);
-
-        return $query;
-    }
-
+    /**
+     * @param array $filterArray
+     * @return Builder
+     */
     public function filter(array $filterArray): Builder
     {
-        $query = Product::query();
+        $query = $this->model->newQuery();
 
         $filters = [
             'categories' => 'category_id',
@@ -65,6 +55,26 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
                 }
             }
         }
+
+        return $query;
+    }
+
+    /**
+     * @param Builder $query
+     * @param array $sortArray
+     *
+     * @return Builder
+     */
+    public function sort(Builder $query, array $sortArray): Builder
+    {
+        $field = $sortArray['field'] ?? 'name';
+        $direction = $sortArray['direction'] ?? 'asc';
+
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'asc';
+        }
+
+        $query->orderBy($field, $direction);
 
         return $query;
     }

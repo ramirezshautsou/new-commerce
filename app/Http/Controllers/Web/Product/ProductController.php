@@ -41,6 +41,8 @@ class ProductController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return View
      */
     public function index(Request $request): View
@@ -50,7 +52,8 @@ class ProductController extends Controller
         $sortBy = $request->query('sort_by', 'id');
         $sortOrder = $request->query('sort_order', 'asc');
 
-        $query = $this->productRepository->filter($filters);
+        $query = $this->productRepository
+            ->filter($filters);
 
         return view('products.index', [
             'products' => $this->productRepository

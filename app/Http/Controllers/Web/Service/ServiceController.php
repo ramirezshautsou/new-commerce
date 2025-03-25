@@ -10,6 +10,9 @@ use Illuminate\View\View;
 
 class ServiceController extends Controller
 {
+    /**
+     * @var string $namel
+     */
     protected string $name;
 
     /**
@@ -32,6 +35,9 @@ class ServiceController extends Controller
         ]);
     }
 
+    /**
+     * @return View
+     */
     public function create(): View
     {
         return view('services.create', [
@@ -40,9 +46,15 @@ class ServiceController extends Controller
         ]);
     }
 
+    /**
+     * @param ServiceRequest $request
+     *
+     * @return RedirectResponse
+     */
     public function store(ServiceRequest $request): RedirectResponse
     {
-        $this->serviceRepository->create($request->validated());
+        $this->serviceRepository
+            ->create($request->validated());
 
         return redirect(route('services.index'))
             ->with('success', __('messages.create', [
@@ -50,6 +62,11 @@ class ServiceController extends Controller
             ]));
     }
 
+    /**
+     * @param int $serviceId
+     *
+     * @return View
+     */
     public function show(int $serviceId): View
     {
         return view('services.show', [
@@ -58,16 +75,29 @@ class ServiceController extends Controller
         ]);
     }
 
+    /**
+     * @param int $serviceId
+     *
+     * @return View
+     */
     public function edit(int $serviceId): View
     {
         return view('services.edit', [
-            'service' => $this->serviceRepository->findById($serviceId),
+            'service' => $this->serviceRepository
+                ->findById($serviceId),
         ]);
     }
 
+    /**
+     * @param ServiceRequest $request
+     * @param int $serviceId
+     *
+     * @return RedirectResponse
+     */
     public function update(ServiceRequest $request, int $serviceId): RedirectResponse
     {
-        $serviceId = $this->serviceRepository->findById($serviceId);
+        $serviceId = $this->serviceRepository
+            ->findById($serviceId);
         $serviceId->update($request->validated());
 
         return redirect(route('services.index'))
@@ -76,9 +106,15 @@ class ServiceController extends Controller
             ]));
     }
 
+    /**
+     * @param int $serviceId
+     *
+     * @return RedirectResponse
+     */
     public function destroy(int $serviceId): RedirectResponse
     {
-        $serviceId = $this->serviceRepository->findById($serviceId);
+        $serviceId = $this->serviceRepository
+            ->findById($serviceId);
         $serviceId->delete();
 
         return redirect(route('services.index'))

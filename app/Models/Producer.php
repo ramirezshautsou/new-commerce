@@ -10,6 +10,9 @@ class Producer extends Model
 {
     use HasFactory;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'name',
         'alias',
@@ -22,5 +25,4 @@ class Producer extends Model
     {
         return $this->hasMany(Product::class);
     }
-
 }

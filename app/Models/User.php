@@ -9,9 +9,6 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /**
-     * @use HasFactory
-     */
     use HasFactory, Notifiable;
 
     /**
@@ -49,17 +46,18 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * @var int[]
+     */
     protected $attributes = [
         'role_id' => 2,
     ];
 
+    /**
+     * @return BelongsTo
+     */
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
-    }
-
-    public function getRoleAttribute()
-    {
-        return $this->role()->first();
     }
 }

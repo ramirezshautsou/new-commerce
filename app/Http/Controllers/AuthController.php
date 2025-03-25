@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest;
-use App\Http\Requests\UserRequest;
 use App\Repositories\User\Interfaces\UserRepositoryInterface;
-use App\Repositories\UserRole\UserRoleRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

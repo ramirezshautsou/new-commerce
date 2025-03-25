@@ -14,6 +14,7 @@ class ProductService extends Model
      * @var bool
      */
     public $timestamps = false;
+
     /**
      * @var string[]
      */

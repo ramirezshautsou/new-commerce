@@ -23,6 +23,6 @@ class ProducerRepository extends BaseRepository implements ProducerRepositoryInt
      */
     public function getProductByProducer(int $producerId): Producer
     {
-        return Producer::with('products')->findOrFail($producerId);
+        return $this->model->with('products')->findOrFail($producerId);
     }
 }

@@ -11,10 +11,20 @@ use Illuminate\View\View;
 
 class UserController extends Controller
 {
+    /**
+     * @const PAGE_LIMIT
+     */
     private const PAGE_LIMIT = 10;
 
+    /**
+     * @var string $name
+     */
     protected string $name;
 
+    /**
+     * @param UserRepositoryInterface $userRepository
+     * @param UserRoleRepository $userRoleRepository
+     */
     public function __construct(
         protected UserRepositoryInterface $userRepository,
         protected UserRoleRepository      $userRoleRepository,
@@ -23,6 +33,9 @@ class UserController extends Controller
         $this->name = __('entities.user');
     }
 
+    /**
+     * @return View
+     */
     public function index(): View
     {
         return view('admin.users.index', [
@@ -31,6 +44,11 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * @param int $userId
+     *
+     * @return View
+     */
     public function show(int $userId): View
     {
         return view('admin.users.show', [
@@ -41,6 +59,9 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * @return View
+     */
     public function create(): View
     {
         return view('admin.users.create', [
@@ -49,6 +70,11 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * @param UserRequest $request
+     *
+     * @return RedirectResponse
+     */
     public function store(UserRequest $request): RedirectResponse
     {
         $this->userRepository
@@ -60,6 +86,11 @@ class UserController extends Controller
             ]));
     }
 
+    /**
+     * @param int $userId
+     *
+     * @return View
+     */
     public function edit(int $userId): View
     {
         return view('admin.users.edit', [
@@ -70,6 +101,12 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * @param UserRequest $request
+     * @param int $userId
+     *
+     * @return RedirectResponse
+     */
     public function update(UserRequest $request, int $userId): RedirectResponse
     {
         $user = $this->userRepository
@@ -82,6 +119,11 @@ class UserController extends Controller
             ]));
     }
 
+    /**
+     * @param int $userId
+     *
+     * @return RedirectResponse
+     */
     public function destroy(int $userId): RedirectResponse
     {
         $user = $this->userRepository

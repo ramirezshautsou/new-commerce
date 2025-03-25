@@ -11,14 +11,14 @@ use Symfony\Component\HttpFoundation\Response;
 class CheckRole
 {
     /**
-     * Handle an incoming request.
+     * @param Request $request
+     * @param Closure $next
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @return Response
      */
     public function handle(Request $request, Closure $next): Response
     {
-
-        if(User::query()->findOrFail(auth()->id())->role_id !== 1) {
+        if (User::query()->findOrFail(auth()->id())->role_id !== 1) {
             return response()->view('errors.403');
         }
 
