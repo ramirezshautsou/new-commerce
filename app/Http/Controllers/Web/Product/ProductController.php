@@ -4,10 +4,7 @@ namespace App\Http\Controllers\Web\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
-use App\Repositories\Product\Interfaces\CategoryRepositoryInterface;
-use App\Repositories\Product\Interfaces\ProducerRepositoryInterface;
-use App\Repositories\Product\Interfaces\ProductRepositoryInterface;
-use App\Repositories\Service\Interfaces\ServiceRepositoryInterface;
+use App\Services\ProductService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -25,19 +22,12 @@ class ProductController extends Controller
     protected string $name;
 
     /**
-     * @param ProductRepositoryInterface $productRepository
-     * @param CategoryRepositoryInterface $categoryRepository
-     * @param ProducerRepositoryInterface $producerRepository
-     * @param ServiceRepositoryInterface $serviceRepository
+     * @param ProductService $productService
      */
     public function __construct(
-        protected ProductRepositoryInterface  $productRepository,
-        protected CategoryRepositoryInterface $categoryRepository,
-        protected ProducerRepositoryInterface $producerRepository,
-        protected ServiceRepositoryInterface  $serviceRepository,
+        private ProductService $productService,
     )
     {
-        $this->name = __('entities.product');
     }
 
     /**
@@ -47,25 +37,14 @@ class ProductController extends Controller
      */
     public function index(Request $request): View
     {
-        $filters = $request->only(['categories', 'producers', 'price_min', 'price_max']);
-
-        $sortBy = $request->query('sort_by', 'id');
-        $sortOrder = $request->query('sort_order', 'asc');
-
-        $query = $this->productRepository
-            ->filter($filters);
-
         return view('products.index', [
-            'products' => $this->productRepository
-                ->sort($query, [
-                    'field' => $sortBy,
-                    'direction' => $sortOrder
-                ])
-                ->paginate(self::PAGE_LIMIT),
-            'categories' => $this->categoryRepository
-                ->getAll(),
-            'producers' => $this->producerRepository
-                ->getAll(),
+            'products' => $this->productService
+                ->getFilteredProducts(
+                    $request->only(['categories', 'producers', 'price_min', 'price_max']),
+                    $request->query('sort_by', 'id'),
+                    $request->query('sort_order', 'asc'),
+                    self::PAGE_LIMIT,
+                ),
         ]);
     }
 
@@ -77,10 +56,8 @@ class ProductController extends Controller
     public function show(int $productId): View
     {
         return view('products.show', [
-            'product' => $this->productRepository
-                ->findById($productId),
-            'services' => $this->serviceRepository
-                ->getAll(),
+            'product' => $this->productService
+                ->getProductById($productId),
         ]);
     }
 
@@ -89,12 +66,7 @@ class ProductController extends Controller
      */
     public function create(): View
     {
-        return view('products.create', [
-            'categories' => $this->categoryRepository
-                ->getAll(),
-            'producers' => $this->producerRepository
-                ->getAll(),
-        ]);
+        return view('products.create');
     }
 
     /**
@@ -104,12 +76,12 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request): RedirectResponse
     {
-        $this->productRepository
-            ->create($request->validated());
+        $this->productService
+            ->createProduct($request->validated());
 
         return redirect(route('products.index'))
             ->with('success', __('messages.created_success', [
-                'name' => $this->name,
+                'name' => __('entities.product'),
             ]));
     }
 
@@ -121,12 +93,8 @@ class ProductController extends Controller
     public function edit(int $productId): View
     {
         return view('products.edit', [
-            'product' => $this->productRepository
-                ->findById($productId),
-            'categories' => $this->categoryRepository
-                ->getAll(),
-            'producers' => $this->producerRepository
-                ->getAll(),
+            'product' => $this->productService
+                ->getProductById($productId),
         ]);
     }
 
@@ -138,13 +106,12 @@ class ProductController extends Controller
      */
     public function update(ProductRequest $request, int $productId): RedirectResponse
     {
-        $product = $this->productRepository
-            ->findById($productId);
-        $product->update($request->validated());
+        $product = $this->productService
+            ->updateProduct($productId, $request->validated());
 
         return redirect(route('products.index'))
             ->with('success', __('messages.updated_success', [
-                'name' => $this->name,
+                'name' => __('entities.product'),
             ]));
     }
 
@@ -155,13 +122,12 @@ class ProductController extends Controller
      */
     public function destroy(int $productId): RedirectResponse
     {
-        $product = $this->productRepository
-            ->findById($productId);
-        $product->delete();
+        $this->productService
+            ->deleteProduct($productId);
 
         return redirect(route('products.index'))
             ->with('success', __('messages.deleted_success', [
-                'name' => $this->name,
+                'name' => __('entities.product'),
             ]));
     }
 }

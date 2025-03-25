@@ -12,6 +12,8 @@ use App\Repositories\Service\Interfaces\ServiceRepositoryInterface;
 use App\Repositories\Service\ServiceRepository;
 use App\Repositories\User\Interfaces\UserRepositoryInterface;
 use App\Repositories\User\UserRepository;
+use App\View\Composers\ProductComposer;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
 
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+
+        View::composer(['products.create', 'products.edit', 'products.index'], ProductComposer::class);
     }
 
     /**
