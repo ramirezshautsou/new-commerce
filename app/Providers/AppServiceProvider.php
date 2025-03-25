@@ -12,7 +12,11 @@ use App\Repositories\Service\Interfaces\ServiceRepositoryInterface;
 use App\Repositories\Service\ServiceRepository;
 use App\Repositories\User\Interfaces\UserRepositoryInterface;
 use App\Repositories\User\UserRepository;
+use App\View\Composers\CategoryComposer;
+use App\View\Composers\ProducerComposer;
 use App\View\Composers\ProductComposer;
+use App\View\Composers\ServiceComposer;
+use App\View\Composers\UserComposer;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -33,7 +37,37 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
 
-        View::composer(['products.create', 'products.edit', 'products.index'], ProductComposer::class);
+        View::composer([
+            'products.create',
+            'products.edit',
+            'products.index',
+            'products.show',
+        ], ProductComposer::class);
+
+        View::composer([
+            'categories.create',
+            'categories.index',
+            'categories.edit',
+        ], CategoryComposer::class);
+
+        View::composer([
+            'producers.create',
+            'producers.index',
+            'producers.edit',
+        ], ProducerComposer::class);
+
+        View::composer([
+            'services.create',
+            'services.index',
+            'services.edit',
+        ], ServiceComposer::class);
+
+        View::composer([
+            'admin.users.create',
+            'admin.users.index',
+            'admin.users.edit',
+        ], UserComposer::class);
+
     }
 
     /**

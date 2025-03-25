@@ -12,7 +12,12 @@ class ProductService
         protected ProductRepositoryInterface $productRepository,
     ) {}
 
-    public function getFilteredProducts(array $filters, string $sortBy, string $sortOrder, int $limit): LengthAwarePaginator
+    public function getFilteredProducts(
+        array  $filters,
+        string $sortBy,
+        string $sortOrder,
+        int    $limit
+    ): LengthAwarePaginator
     {
         $query = $this->productRepository
             ->filter($filters);

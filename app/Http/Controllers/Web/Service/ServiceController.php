@@ -5,34 +5,27 @@ namespace App\Http\Controllers\Web\Service;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ServiceRequest;
 use App\Repositories\Service\Interfaces\ServiceRepositoryInterface;
+use App\Services\ServiceService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class ServiceController extends Controller
 {
     /**
-     * @var string $namel
-     */
-    protected string $name;
-
-    /**
      * @param ServiceRepositoryInterface $serviceRepository
+     * @param ServiceService $serviceService
      */
     public function __construct(
         protected ServiceRepositoryInterface $serviceRepository,
-    )
-    {
-        $this->name = __('entities.service');
-    }
+        protected ServiceService $serviceService,
+    ) {}
 
     /**
      * @return View
      */
     public function index(): View
     {
-        return view('services.index', [
-            'services' => $this->serviceRepository->getAll(),
-        ]);
+        return view('services.index');
     }
 
     /**
@@ -40,10 +33,7 @@ class ServiceController extends Controller
      */
     public function create(): View
     {
-        return view('services.create', [
-            'services' => $this->serviceRepository
-                ->getAll(),
-        ]);
+        return view('services.create');
     }
 
     /**
@@ -58,7 +48,7 @@ class ServiceController extends Controller
 
         return redirect(route('services.index'))
             ->with('success', __('messages.create', [
-                'name' => $this->name,
+                'name' => __('entities.service'),
             ]));
     }
 
@@ -96,13 +86,12 @@ class ServiceController extends Controller
      */
     public function update(ServiceRequest $request, int $serviceId): RedirectResponse
     {
-        $serviceId = $this->serviceRepository
-            ->findById($serviceId);
-        $serviceId->update($request->validated());
+        $this->serviceService
+            ->updateService($request, $serviceId);
 
         return redirect(route('services.index'))
             ->with('success', __('messages.updated_success', [
-                'name' => $this->name,
+                'name' => __('entities.service'),
             ]));
     }
 
@@ -113,13 +102,12 @@ class ServiceController extends Controller
      */
     public function destroy(int $serviceId): RedirectResponse
     {
-        $serviceId = $this->serviceRepository
-            ->findById($serviceId);
-        $serviceId->delete();
+        $this->serviceService
+            ->deleteService($serviceId);
 
         return redirect(route('services.index'))
             ->with('success', __('messages.deleted_success', [
-                'name' => $this->name,
+                'name' => __('entities.service'),
             ]));
     }
 }

@@ -6,7 +6,7 @@ use App\Models\Producer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Producer>
+ * @extends Factory
  */
 class ProducerFactory extends Factory
 {
@@ -17,6 +17,9 @@ class ProducerFactory extends Factory
      */
     protected $model = Producer::class;
 
+    /**
+     * @return array
+     */
     public function definition(): array
     {
         return [

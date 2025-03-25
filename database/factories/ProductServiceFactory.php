@@ -8,7 +8,7 @@ use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProductService>
+ * @extends Factory
  */
 class ProductServiceFactory extends Factory
 {
@@ -19,6 +19,9 @@ class ProductServiceFactory extends Factory
      */
     protected $model = ProductService::class;
 
+    /**
+     * @return array
+     */
     public function definition(): array
     {
         return [

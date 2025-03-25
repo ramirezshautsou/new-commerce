@@ -5,37 +5,27 @@ namespace App\Http\Controllers\Web\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProducerRequest;
 use App\Repositories\Product\Interfaces\ProducerRepositoryInterface;
+use App\Services\ProducerService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class ProducerController extends Controller
 {
     /**
-     * @var string $name
-     */
-    protected string $name;
-
-    /**
      * @param ProducerRepositoryInterface $producerRepository
-     * @param ProducerRepositoryInterface $productRepository
+     * @param ProducerService $producerService
      */
     public function __construct(
         protected ProducerRepositoryInterface $producerRepository,
-        protected ProducerRepositoryInterface $productRepository,
-    )
-    {
-        $this->name = __('entities.producer');
-    }
+        protected ProducerService $producerService,
+    ) {}
 
     /**
      * @return View
      */
     public function index(): View
     {
-        return view('producers.index', [
-            'producers' => $this->producerRepository
-                ->getAll(),
-        ]);
+        return view('producers.index');
     }
 
     /**
@@ -56,10 +46,7 @@ class ProducerController extends Controller
      */
     public function create(): View
     {
-        return view('producers.create', [
-            'producers' => $this->producerRepository
-                ->getAll(),
-        ]);
+        return view('producers.create');
     }
 
     /**
@@ -74,7 +61,7 @@ class ProducerController extends Controller
 
         return redirect(route('producers.index'))
             ->with('success', __('messages.created_success', [
-                'name' => $this->name,
+                'name' => __('entities.producer'),
             ]));
     }
 
@@ -99,13 +86,12 @@ class ProducerController extends Controller
      */
     public function update(ProducerRequest $request, int $producerId): RedirectResponse
     {
-        $producer = $this->producerRepository
-            ->findById($producerId);
-        $producer->update($request->validated());
+        $this->producerService
+            ->updateProducer($request, $producerId);
 
         return redirect(route('producers.index'))
             ->with('success', __('messages.updated_success', [
-                'name' => $this->name,
+                'name' => __('entities.producer'),
             ]));
     }
 
@@ -116,13 +102,12 @@ class ProducerController extends Controller
      */
     public function destroy(int $producerId): RedirectResponse
     {
-        $producer = $this->producerRepository
-            ->findById($producerId);
-        $producer->delete();
+        $this->producerService
+            ->deleteProducer($producerId);
 
         return redirect(route('producers.index'))
             ->with('success', __('messages.deleted_success', [
-                'name' => $this->name,
+                'name' => __('entities.producer'),
             ]));
     }
 }

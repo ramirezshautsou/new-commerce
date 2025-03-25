@@ -6,7 +6,7 @@ use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Service>
+ * @extends Factory
  */
 class ServiceFactory extends Factory
 {
@@ -17,6 +17,9 @@ class ServiceFactory extends Factory
      */
     protected $model = Service::class;
 
+    /**
+     * @return array
+     */
     public function definition(): array
     {
         return [

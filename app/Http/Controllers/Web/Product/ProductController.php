@@ -17,18 +17,11 @@ class ProductController extends Controller
     private const PAGE_LIMIT = 15;
 
     /**
-     * @var string $name
-     */
-    protected string $name;
-
-    /**
      * @param ProductService $productService
      */
     public function __construct(
         private ProductService $productService,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @param Request $request

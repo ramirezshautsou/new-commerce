@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Repositories\User\Interfaces\UserRepositoryInterface;
 use App\Repositories\UserRole\UserRoleRepository;
+use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -17,21 +18,15 @@ class UserController extends Controller
     private const PAGE_LIMIT = 10;
 
     /**
-     * @var string $name
-     */
-    protected string $name;
-
-    /**
      * @param UserRepositoryInterface $userRepository
      * @param UserRoleRepository $userRoleRepository
+     * @param UserService $userService
      */
     public function __construct(
         protected UserRepositoryInterface $userRepository,
-        protected UserRoleRepository      $userRoleRepository,
-    )
-    {
-        $this->name = __('entities.user');
-    }
+        protected UserRoleRepository $userRoleRepository,
+        private UserService             $userService,
+    ) {}
 
     /**
      * @return View
@@ -54,8 +49,6 @@ class UserController extends Controller
         return view('admin.users.show', [
             'user' => $this->userRepository
                 ->findById($userId),
-            'roles' => $this->userRoleRepository
-                ->getAll(),
         ]);
     }
 
@@ -64,10 +57,7 @@ class UserController extends Controller
      */
     public function create(): View
     {
-        return view('admin.users.create', [
-            'roles' => $this->userRoleRepository
-                ->getAll(),
-        ]);
+        return view('admin.users.create');
     }
 
     /**
@@ -82,7 +72,7 @@ class UserController extends Controller
 
         return redirect(route('admin.users.index'))
             ->with('success', __('messages.create_success', [
-                'name' => $this->name,
+                'name' => __('entities.user'),
             ]));
     }
 
@@ -96,8 +86,6 @@ class UserController extends Controller
         return view('admin.users.edit', [
             'user' => $this->userRepository
                 ->findById($userId),
-            'roles' => $this->userRoleRepository
-                ->getAll(),
         ]);
     }
 
@@ -109,13 +97,12 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, int $userId): RedirectResponse
     {
-        $user = $this->userRepository
-            ->findById($userId);
-        $user->update($request->validated());
+        $this->userService
+            ->updateUser($request, $userId);
 
         return redirect(route('admin.users.index'))
             ->with('success', __('messages.update_success', [
-                'name' => $this->name,
+                'name' => __('entities.user'),
             ]));
     }
 
@@ -126,13 +113,12 @@ class UserController extends Controller
      */
     public function destroy(int $userId): RedirectResponse
     {
-        $user = $this->userRepository
-            ->findById($userId);
-        $user->delete();
+        $this->userService
+            ->deleteUser($userId);
 
         return redirect(route('admin.users.index'))
             ->with('success', __('messages.delete_success', [
-                'name' => $this->name,
+                'name' => __('entities.user'),
             ]));
     }
 }

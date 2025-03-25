@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Requests\ProducerRequest;
 use App\Repositories\Product\Interfaces\CategoryRepositoryInterface;
-use App\Repositories\Product\Interfaces\ProductRepositoryInterface;
 use App\Services\CategoryService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -14,33 +13,20 @@ use Illuminate\View\View;
 class CategoryController extends Controller
 {
     /**
-     * @var string $name
-     */
-    protected string $name;
-
-    /**
-     * @param ProductRepositoryInterface $productRepository
      * @param CategoryRepositoryInterface $categoryRepository
      * @param CategoryService $categoryService
      */
     public function __construct(
-        protected ProductRepositoryInterface  $productRepository,
         protected CategoryRepositoryInterface $categoryRepository,
-        protected CategoryService             $categoryService,
-    )
-    {
-        $this->name = __('entities.category');
-    }
+        private CategoryService               $categoryService,
+    ) {}
 
     /**
      * @return View
      */
     public function index(): View
     {
-        return view('categories.index', [
-            'categories' => $this->categoryRepository
-                ->getAll(),
-        ]);
+        return view('categories.index');
     }
 
     /**
@@ -61,10 +47,7 @@ class CategoryController extends Controller
      */
     public function create(): View
     {
-        return view('categories.create', [
-            'categories' => $this->categoryRepository
-                ->getAll(),
-        ]);
+        return view('categories.create');
     }
 
     /**
@@ -79,7 +62,7 @@ class CategoryController extends Controller
 
         return redirect(route('categories.index'))
             ->with('success', __('messages.created_success', [
-                'name' => $this->name,
+                'name' => __('entities.category'),
             ]));
     }
 
@@ -109,7 +92,7 @@ class CategoryController extends Controller
 
         return redirect(route('categories.index'))
             ->with('success', __('messages.updated_success', [
-                'name' => $this->name,
+                'name' => __('entities.category'),
             ]));
     }
 
@@ -120,13 +103,12 @@ class CategoryController extends Controller
      */
     public function destroy(int $categoryId): RedirectResponse
     {
-        $category = $this->categoryRepository
-            ->findById($categoryId);
-        $category->delete();
+        $this->categoryService
+            ->deleteCategory($categoryId);
 
         return redirect(route('categories.index'))
             ->with('success', __('messages.deleted_success', [
-                'name' => $this->name,
+                'name' => __('entities.category'),
             ]));
     }
 }

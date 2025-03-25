@@ -4,47 +4,24 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AuthRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
-    /**
-     * @return bool
-     */
+    public function rules(): array
+    {
+        return [
+            'email' => 'required|string|email',
+            'password' => 'required|string|min:8',
+        ];
+    }
+
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * @return string[]
-     */
-    public function rules(): array
-    {
-        return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $this->route('user'),
-            'password' => $this->isMethod('post') ? 'required|string|min:8' : 'nullable|string|min:8',
-        ];
-    }
-
-    /**
-     * @return array
-     */
     public function messages(): array
     {
         return [
-            'name.required' => __(
-                'messages.name_required', [
-                'attribute' => __('field_names.name')
-            ]),
-            'name.string' => __(
-                'messages.name_string', [
-                'attribute' => __('field_names.name')
-            ]),
-            'name.max' => __(
-                'messages.name_max', [
-                'attribute' => __('field_names.name')
-            ]),
-
             'email.required' => __(
                 'messages.email_required', [
                 'attribute' => __('field_names.email')
