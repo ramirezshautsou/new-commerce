@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ExportCompleted;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,8 +29,11 @@ class ProductMailController extends Controller
         // Сохраняем CSV в S3
         Storage::disk('s3')->put($filePath, $csvData);
 
+        $bucket = config('filesystems.disks.s3.bucket');
+        $filePath = "http://localhost:4566/{$bucket}/{$filePath}";
+
         // Отправляем email админу
-/*        Mail::to('belford2014@gmail.com')->send(new ExportCompleted($filePath));*/
+        Mail::to('belford2014@gmail.com')->send(new ExportCompleted($filePath));
 
         // Возвращаем сообщение об успешном экспорте
         return back()->with('success', 'Export completed');

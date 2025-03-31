@@ -51,6 +51,11 @@ return [
 
         'ses' => [
             'transport' => 'ses',
+            'region' => 'us-east-1',
+            'access_key_id' => 'test',
+            'secret_access_key' => 'test',
+            'endpoint' => 'http://host.docker.internal:4566',
+            'use_path_style_endpoint' => true,
         ],
 
         'postmark' => [
