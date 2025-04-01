@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 class ProductMailController extends Controller
 {
     public function __construct(
-        protected ProductExportService $productExportService
+        protected ProductExportService $productExportService,
     ) {}
 
     public function export(Request $request): RedirectResponse

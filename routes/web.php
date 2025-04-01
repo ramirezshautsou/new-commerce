@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ProductMailController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Web\Product\CategoryController;
 use App\Http\Controllers\Web\Product\ProducerController;
@@ -36,6 +37,8 @@ Route::middleware([Authenticate::class])->group(function () {
         Route::resource('users', UserController::class);
         Route::get('dashboard', [UserController::class, 'index'])->name('dashboard');
         Route::get('export', [ProductMailController::class, 'export'])->name('export');
+        Route::get('currency-rates', [CurrencyController::class, 'showRates'])->name('currency-rates');
+        Route::post('currency-rates/update', [CurrencyController::class, 'updateRates']);
     });
 });
 

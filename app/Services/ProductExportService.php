@@ -17,7 +17,6 @@ readonly class ProductExportService
     {
         $products = $this->productRepository->getAll();
 
-        // Формируем данные для CSV
         $csvData = $this->generateCsvData($products);
 
         $filePath = 'products.csv';
