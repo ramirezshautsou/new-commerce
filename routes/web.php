@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductMailController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
@@ -34,7 +35,11 @@ Route::middleware([Authenticate::class])->group(function () {
     Route::middleware([CheckRole::class])->prefix('admin')->name('admin.')->group(function () {
         Route::resource('users', UserController::class);
         Route::get('dashboard', [UserController::class, 'index'])->name('dashboard');
+        Route::get('export', [ProductMailController::class, 'export'])->name('export');
     });
 });
+
+
+
 
 

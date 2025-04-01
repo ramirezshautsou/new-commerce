@@ -16,6 +16,10 @@
                     <a href="{{ route('producers.index') }}" class="btn btn-primary">Check all producers</a>
                     <a href="{{ route('services.index') }}" class="btn btn-primary">Check all services</a>
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-primary">Check all users</a>
+                    <form action="{{ route('admin.export') }}" method="GET">
+                        @csrf
+                        <button type="submit">Экспортировать товары</button>
+                    </form>
                 @endif
             @endauth
         </div>

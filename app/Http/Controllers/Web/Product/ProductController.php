@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
+use App\Services\ProductExportService;
 use App\Services\ProductService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ class ProductController extends Controller
      */
     public function __construct(
         private ProductService $productService,
+        protected ProductExportService $productExportService,
     ) {}
 
     /**
