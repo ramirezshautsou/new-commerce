@@ -51,11 +51,11 @@ return [
 
         'ses' => [
             'transport' => 'ses',
-            'region' => 'us-east-1',
-            'access_key_id' => 'test',
-            'secret_access_key' => 'test',
-            'endpoint' => 'http://host.docker.internal:4566',
-            'use_path_style_endpoint' => true,
+            'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+            'access_key_id' => env('AWS_ACCESS_KEY_ID'),
+            'secret_access_key' => env('AWS_SECRET_ACCESS_KEY'),
+            'endpoint' => env('AWS_ENDPOINT','http://host.docker.internal:4566'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE', 'false'),
         ],
 
         'postmark' => [
