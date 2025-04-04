@@ -10,7 +10,16 @@
         <p>Producer: <a href="{{ route('producers.show', $product->producer->id) }}">
                 {{$product->producer->name}}</a></p>
         <p>Description: {{$product->description}}</p>
-        <p>Price: <span id="base-price">{{$product->price}}</span></p>
+        <td>
+            Price: <span id="price">{{ $product->price }}</span> <span id="currency">BYN</span>
+        </td>
+        <td>
+            <button onclick="changeCurrency('BYN', {{ $product->price }})">BYN</button>
+            <button onclick="changeCurrency('USD', {{ $convertedPrices['USD'] }})">USD</button>
+            <button onclick="changeCurrency('EUR', {{ $convertedPrices['EUR'] }})">EUR</button>
+            <button onclick="changeCurrency('RUB', {{ $convertedPrices['RUB'] }})">RUB</button>
+        </td>
+
 
         <h3>Select additional services:</h3>
         <form id="service-form">
@@ -18,15 +27,15 @@
                 <div>
                     <input type="checkbox" name="services[]" value="{{ $service->id }}"
                            data-price="{{ $service->price }}" onchange="calculatePrice()">
-                    {{ $service->name }} (+{{ $service->price }})
+                    {{ $service->name }} (+ {{ $service->price }} BYN)
                 </div>
             @endforeach
         </form>
 
-        <p>Total Price: <span id="total-price">{{$product->price}}</span></p>
+        <p>Total Price: <span id="total-price">{{$product->price}} BYN</span></p>
 
         <button class="btn btn-primary" id="total-price-btn">
-            Total Price: {{$product->price}}
+            Total Price: {{$product->price}} BYN
         </button>
         @auth
             @if(auth()->user()?->role->name === 'admin')
@@ -52,6 +61,13 @@
 
             document.getElementById('total-price').innerText = totalPrice.toFixed(2);
             document.getElementById('total-price-btn').innerText = "Total Price: " + totalPrice.toFixed(2);
+        }
+    </script>
+
+    <script>
+        function changeCurrency(currency, price) {
+            document.getElementById('price').innerText = price;
+            document.getElementById('currency').innerText = currency;
         }
     </script>
 @endsection

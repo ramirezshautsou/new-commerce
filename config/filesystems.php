@@ -53,6 +53,7 @@ return [
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
             'bucket' => env('AWS_BUCKET', 'test-bucket'),
+            'url' => env('AWS_BUCKET_URL', 'http://localhost:4566'),
             'endpoint' => env('AWS_ENDPOINT', 'http://host.docker.internal:4566'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
         ],

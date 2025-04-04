@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Mail\ExportCompleted;
 use App\Models\Product;
+use App\Services\ProductExportProcessorService;
+use App\Services\ProductExportQueueService;
 use App\Services\ProductExportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,14 +16,18 @@ use Illuminate\Support\Facades\Storage;
 class ProductMailController extends Controller
 {
     public function __construct(
-        protected ProductExportService $productExportService,
+        private readonly ProductExportQueueService $productExportQueueService,
     ) {}
 
     public function export(Request $request): RedirectResponse
     {
-        $downloadFilePath = $this->productExportService->export();
+        try {
+            $this->productExportQueueService->exportAndQueue();
 
-        return back()->with('success', 'Export completed successfully. Download: ' . $downloadFilePath);
+            return back()->with('success', 'Export completed successfully.');
+        } catch (\Exception $exception) {
+            return back()->with('error', 'Error starting export: ' . $exception->getMessage());
+        }
     }
 }
 

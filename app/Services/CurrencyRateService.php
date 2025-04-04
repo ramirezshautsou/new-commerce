@@ -50,7 +50,7 @@ class CurrencyRateService
                                 ['rate' => $rate] // Данные для обновления
                             );
                         } else {
-                            dd("Invalid rate value for currency {$currencyCode}: {$rate}");
+                            dd("Invalid rate value for currency $currencyCode: $rate");
                         }
                     }
                 }
@@ -71,6 +71,13 @@ class CurrencyRateService
     public function getRates(): array
     {
         return CurrencyRate::all()->pluck('rate', 'currency')->toArray();
+    }
+
+    public function convertCurrency(float $amount, string $toCurrency): ?float
+    {
+        $rates = $this->getRates();
+
+        return isset($rates[$toCurrency]) ? round($amount / $rates[$toCurrency], 2) : null;
     }
 }
 

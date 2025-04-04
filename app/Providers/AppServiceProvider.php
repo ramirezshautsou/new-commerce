@@ -17,6 +17,7 @@ use App\View\Composers\ProducerComposer;
 use App\View\Composers\ProductComposer;
 use App\View\Composers\ServiceComposer;
 use App\View\Composers\UserComposer;
+use Aws\S3\S3Client;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -67,6 +68,20 @@ class AppServiceProvider extends ServiceProvider
             'admin.users.index',
             'admin.users.edit',
         ], UserComposer::class);
+
+        $this->app->singleton(S3Client::class, function ($app) {
+            return new S3Client([
+               'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+               'version' => 'latest',
+               'endpoint' => 'http://host.docker.internal:4566',
+               'use_path_style_endpoint' => true,
+               'credentials' => [
+                   'key' => 'test',
+                   'secret' => 'test',
+               ],
+                'debug' => true,
+            ]);
+        });
 
     }
 

@@ -6,8 +6,9 @@ use Illuminate\Mail\Mailable;
 
 class ExportCompleted extends Mailable
 {
-    public function __construct(protected $downloadFilePath)
-    {}
+    public function __construct(
+        protected $downloadFilePath,
+    ) {}
 
     public function build(): ExportCompleted
     {

@@ -112,7 +112,7 @@
                     </td>
                     <td>{{ $product->category->name ?? 'N/A' }}</td>
                     <td>{{ $product->producer->name ?? 'N/A' }}</td>
-                    <td>{{ $product->price }}</td>
+                    <td>{{ $product->price }} BYN</td>
                     @auth
                         @if(auth()->user()?->role->name === 'admin')
                             <td>
