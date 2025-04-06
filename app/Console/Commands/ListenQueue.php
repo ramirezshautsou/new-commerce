@@ -4,91 +4,162 @@ namespace App\Console\Commands;
 
 use App\Mail\ExportCompleted;
 use Aws\S3\S3Client;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use App\Services\RabbitMq\RabbitMqConnector;
 
 class ListenQueue extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'queue:listen';
 
     /**
-     * The console command description.
-     *
      * @var string
      */
     protected $description = 'Listen to the export queue';
 
+    private $channel;
+
+    /**
+     * @param S3Client $s3Client
+     * @param RabbitMqConnector $rabbitMqConnector
+     */
     public function __construct(
         protected S3Client $s3Client,
+        protected RabbitMqConnector $rabbitMqConnector
     ) {
         parent::__construct();
     }
 
     /**
-     * Execute the console command.
-     * @throws \Exception
+     * @return void
+     *
+     * @throws Exception
      */
     public function handle(): void
     {
-        $connection = new AMQPStreamConnection('rabbitmq', 5672, 'guest', 'guest');
-        $channel = $connection->channel();
+        try {
+            // Получаем канал с помощью RabbitMqConnector
+            $connection = $this->rabbitMqConnector->connect();
+            $this->channel = $connection->channel();
 
-        $channel->basic_consume(
-            'export_queue',
-            '',
-            false,
-            true,
-            false,
-            false,
-            function (AMQPMessage $msg) {
-                $messageBody = $msg->getBody();
+            // Начинаем прослушивание очереди
+            $this->channel->basic_consume(
+                'export_queue',
+                '',
+                false,
+                true,
+                false,
+                false,
+                function (AMQPMessage $msg) {
+                    $this->processMessage($msg->getBody());
+                }
+            );
 
-                $fileName = $this->uploadToS3($messageBody);
+            // Ожидаем сообщений в очереди
+            while ($this->channel->is_consuming()) {
+                $this->channel->wait();
+            }
 
-                $this->sendExportCompletedEmail($fileName);
-            });
-
-        while ($channel->is_consuming()) {
-            $channel->wait();
+        } catch (Exception $e) {
+            $this->error('Error handling RabbitMQ message: ' . $e->getMessage());
+        } finally {
+            $this->cleanup();
         }
-
-        $channel->close();
-        $connection->close();
     }
 
+    /**
+     * Обработка сообщения из очереди
+     *
+     * @param string $csvData
+     *
+     * @return void
+     */
+    private function processMessage(string $csvData): void
+    {
+        try {
+            $fileName = $this->uploadToS3($csvData);
+            $this->sendExportCompletedEmail($fileName);
+        } catch (\Throwable $e) {
+            $this->error('Error processing message: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Загрузка CSV файла на S3
+     *
+     * @param string $csvData
+     *
+     * @return string
+     */
     private function uploadToS3(string $csvData): string
     {
         $fileName = 'products-' . time() . '.csv';
 
-        // Загружаем данные на S3
-        $this->s3Client->putObject([
-            'Bucket' => config('filesystems.disks.s3.bucket'),
-            'Key' => $fileName,
-            'Body' => $csvData,  // Вместо файла передаем данные
-        ]);
+        try {
+            $this->s3Client->putObject([
+                'Bucket' => config('filesystems.disks.s3.bucket'),
+                'Key' => $fileName,
+                'Body' => $csvData,
+            ]);
+        } catch (Exception $e) {
+            throw new Exception('Error uploading file to S3: ' . $e->getMessage());
+        }
 
         return $fileName;
     }
 
-    private function sendExportCompletedEmail($fileName): void
+    /**
+     * Отправка письма об окончании экспорта
+     *
+     * @param string $fileName
+     *
+     * @return void
+     */
+    private function sendExportCompletedEmail(string $fileName): void
     {
-        $downloadUrl = $this->generateDownloadUrl($fileName);
-
-        Mail::to('test@test.com')->send(new ExportCompleted($downloadUrl));
+        try {
+            $downloadUrl = $this->generateDownloadUrl($fileName);
+            Mail::to('test@test.com')->send(new ExportCompleted($downloadUrl));
+        } catch (Exception $e) {
+            $this->error('Error sending email: ' . $e->getMessage());
+        }
     }
 
+    /**
+     * Генерация URL для скачивания файла
+     *
+     * @param string $fileName
+     *
+     * @return string
+     */
     private function generateDownloadUrl(string $fileName): string
     {
         $bucketUrl = config('filesystems.disks.s3.bucket');
-        $storageUrl = 'http://localhost:4566';
+        $storageUrl = env('AWS_URL');
 
         return "$storageUrl/$bucketUrl/$fileName";
+    }
+
+    /**
+     * Очистка ресурсов (закрытие канала и соединения)
+     */
+    private function cleanup(): void
+    {
+        try {
+            if ($this->channel) {
+                $this->channel->close();
+            }
+
+            if (isset($connection) && $connection) {
+                $connection->close();
+            }
+        } catch (Exception $e) {
+            $this->error('Error during cleanup: ' . $e->getMessage());
+        }
     }
 }

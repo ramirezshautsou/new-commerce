@@ -11,9 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class ProducerFactory extends Factory
 {
     /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
+     * @var string
      */
     protected $model = Producer::class;
 

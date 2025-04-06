@@ -7,24 +7,25 @@ use Illuminate\Support\Facades\Schema;
 class CreateProductServicesTable extends Migration
 {
     /**
-     * Run the migrations.
+     * @return void
      */
     public function up(): void
     {
         Schema::create('product_services', function (Blueprint $table) {
             $table->bigInteger('product_id')->unsigned()->index();
             $table->bigInteger('service_id')->unsigned()->index();
+            $table->timestamps();
 
             $table->primary(['product_id', 'service_id']);
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
-
-            $table->timestamps();
+            $table->foreign('product_id')->references('id')->on('products')
+                ->onDelete('cascade');
+            $table->foreign('service_id')->references('id')->on('services')
+                ->onDelete('cascade');
         });
     }
 
     /**
-     * Reverse the migrations.
+     * @return void
      */
     public function down(): void
     {
@@ -36,5 +37,3 @@ class CreateProductServicesTable extends Migration
         Schema::dropIfExists('product_services');
     }
 }
-
-;

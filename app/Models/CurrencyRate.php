@@ -9,13 +9,22 @@ class CurrencyRate extends Model
 {
     use HasFactory;
 
+    /**
+     * @var string
+     */
     protected $table = 'currency_rates';
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'currency',
         'rate',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $casts = [
         'rate' => 'float',
     ];

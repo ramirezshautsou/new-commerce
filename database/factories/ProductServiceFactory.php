@@ -13,9 +13,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class ProductServiceFactory extends Factory
 {
     /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
+     * @var string
      */
     protected $model = ProductService::class;
 

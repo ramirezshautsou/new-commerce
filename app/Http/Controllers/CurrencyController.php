@@ -3,47 +3,41 @@
 namespace App\Http\Controllers;
 
 use App\Services\CurrencyRateService;
-use Illuminate\Http\Request;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
-class CurrencyController extends Controller
+final class CurrencyController extends Controller
 {
-    protected CurrencyRateService $currencyRateService;
-
     /**
-     * Конструктор контроллера
-     *
      * @param CurrencyRateService $currencyRateService
      */
-    public function __construct(CurrencyRateService $currencyRateService)
+    public function __construct(
+        protected CurrencyRateService $currencyRateService,
+    ) {}
+
+    /**
+     * @return RedirectResponse
+     */
+    public function updateRates(): RedirectResponse
     {
-        $this->currencyRateService = $currencyRateService;
+        try {
+            $this->currencyRateService->updateRates();
+
+            return back()->with('success', __('messages.currency_updated_success'));
+        } catch (ConnectionException $e) {
+            return back()->with('error', __('messages.currency_updated_fail'));
+        }
+
     }
 
     /**
-     * Обновить курсы валют
-     *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return View
      */
-    public function updateRates(): \Illuminate\Http\RedirectResponse
+    public function showRates(): View
     {
-        // Обновляем курсы валют
-        $this->currencyRateService->updateRates();
-
-        // Возвращаем сообщение об успешном обновлении
-        return back()->with('success', 'Currency rates updated successfully');
-    }
-
-    /**
-     * Показать текущие курсы валют
-     *
-     * @return \Illuminate\View\View
-     */
-    public function showRates(): \Illuminate\View\View
-    {
-        // Получаем курсы валют
         $rates = $this->currencyRateService->getRates();
 
-        // Возвращаем представление с данными
         return view('admin.currency-rates', compact('rates'));
     }
 }

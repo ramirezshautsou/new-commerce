@@ -21,7 +21,8 @@ class CategoryRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'alias' => 'required|string|max:255|unique:categories,alias,' . $this->route('category'),
+            'alias' => 'required|string|max:255|unique:categories,alias,'
+                . ($this->route('category') ?? 'NULL'),
         ];
     }
 
@@ -31,35 +32,28 @@ class CategoryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => __(
-                'messages.name_required', [
-                'attribute' => __('field_names.name',
-                )]),
-            'name.string' => __(
-                'messages.name_string', [
-                'attribute' => __('field_names.name',
-                )]),
-            'name.max' => __(
-                'messages.name_max', [
-                'attribute' => __('field_names.name',
-                )]),
+            'name.required' => __('messages.name_required', [
+                'attribute' => __('field_names.name'),
+            ]),
+            'name.string' => __('messages.name_string', [
+                'attribute' => __('field_names.name'),
+            ]),
+            'name.max' => __('messages.name_max', [
+                'attribute' => __('field_names.name'),
+            ]),
 
-            'alias.required' => __(
-                'messages.alias_required', [
-                'attribute' => __('field_names.alias',
-                )]),
-            'alias.string' => __(
-                'messages.alias_string', [
-                'attribute' => __('field_names.alias',
-                )]),
-            'alias.max' => __(
-                'messages.alias_max', [
-                'attribute' => __('field_names.alias',
-                )]),
-            'alias.unique' => __(
-                'messages.alias_unique', [
-                'attribute' => __('field_names.alias',
-                )]),
+            'alias.required' => __('messages.alias_required', [
+                'attribute' => __('field_names.alias'),
+            ]),
+            'alias.string' => __('messages.alias_string', [
+                'attribute' => __('field_names.alias'),
+            ]),
+            'alias.max' => __('messages.alias_max', [
+                'attribute' => __('field_names.alias'),
+            ]),
+            'alias.unique' => __('messages.alias_unique', [
+                'attribute' => __('field_names.alias'),
+            ]),
         ];
     }
 }

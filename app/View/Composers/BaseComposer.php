@@ -22,7 +22,13 @@ abstract class BaseComposer implements BaseComposerInterface
     public function compose(View $view): void
     {
         foreach ($this->repositories as $key => $repository) {
-            $view->with($key, $repository->getAll());
+            $id = request()->route('id');
+
+            if ($id) {
+                $view->with($key, $repository->findById($id));
+            } else {
+                $view->with($key, $repository->getAll());
+            }
         }
     }
 }

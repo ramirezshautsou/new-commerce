@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateCategoriesTable extends Migration
 {
     /**
-     * Run the migrations.
+     * @return void
      */
     public function up(): void
     {
@@ -17,15 +17,14 @@ class CreateCategoriesTable extends Migration
             $table->string('name', 255);
             $table->string('alias', 255)->unique();
             $table->bigInteger('parent_id')->unsigned()->nullable()->index();
+            $table->timestamps();
 
             $table->foreign('parent_id')->references('id')->on('categories');
-
-            $table->timestamps();
         });
     }
 
     /**
-     * Reverse the migrations.
+     * @return void
      */
     public function down(): void
     {
@@ -36,5 +35,3 @@ class CreateCategoriesTable extends Migration
         Schema::dropIfExists('categories');
     }
 }
-
-;

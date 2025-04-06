@@ -11,6 +11,7 @@ use App\Http\Controllers\Web\Product\ProductController;
 use App\Http\Controllers\Web\Service\ServiceController;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\RemovePageOne;
 use Illuminate\Support\Facades\Route;
 
@@ -42,7 +43,4 @@ Route::middleware([Authenticate::class])->group(function () {
     });
 });
 
-
-
-
-
+#->middleware(RedirectIfAuthenticated::class)->

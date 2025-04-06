@@ -5,6 +5,8 @@ return [
     'updated_success' => ':name successfully updated!',
     'deleted_success' => ':name successfully deleted!',
 
+    'delete_failed' => ':name failed to delete!',
+
     'category_id_required' => ':attribute is required.',
     'category_id_exists' => 'The selected :attribute does not exist.',
 
@@ -39,4 +41,10 @@ return [
     'password_confirmation' => ':attribute confirmation does not match.',
     'role_required' => ':attribute is required.',
     'role_exists' => ':attribute is not valid.',
+
+    'currency_updated_success' => ':name successfully updated!',
+    'currency_updated_fail' => ':name Failed to update currency rates. Please try again later.',
+
+    'auth_failed' => 'Authentication failed, please check your credentials.',
+    'registration_success' => 'Registration successful, please log in.',
 ];

@@ -41,7 +41,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
@@ -49,8 +49,8 @@ return [
 
         's3' => [
             'driver' => env('AWS_DRIVER'),
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'key' => env('AWS_ACCESS_KEY_ID', 'nobody'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY', 'knows'),
             'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
             'bucket' => env('AWS_BUCKET', 'test-bucket'),
             'url' => env('AWS_BUCKET_URL', 'http://localhost:4566'),

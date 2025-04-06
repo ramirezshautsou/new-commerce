@@ -18,7 +18,7 @@ class CategoryController extends Controller
      */
     public function __construct(
         protected CategoryRepositoryInterface $categoryRepository,
-        private CategoryService               $categoryService,
+        protected CategoryService               $categoryService,
     ) {}
 
     /**
@@ -80,12 +80,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param ProducerRequest $request
+     * @param CategoryRequest $request
      * @param int $categoryId
      *
      * @return RedirectResponse
      */
-    public function update(ProducerRequest $request, int $categoryId): RedirectResponse
+    public function update(CategoryRequest $request, int $categoryId): RedirectResponse
     {
         $this->categoryService
             ->updateCategory($request, $categoryId);

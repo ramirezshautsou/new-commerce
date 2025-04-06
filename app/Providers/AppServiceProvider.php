@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Repositories\Product\CategoryRepository;
 use App\Repositories\Product\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Product\Interfaces\ProducerRepositoryInterface;
@@ -18,8 +20,10 @@ use App\View\Composers\ProductComposer;
 use App\View\Composers\ServiceComposer;
 use App\View\Composers\UserComposer;
 use Aws\S3\S3Client;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -69,20 +73,28 @@ class AppServiceProvider extends ServiceProvider
             'admin.users.edit',
         ], UserComposer::class);
 
-        $this->app->singleton(S3Client::class, function ($app) {
+        $this->app->singleton(S3Client::class, function () {
             return new S3Client([
-               'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
-               'version' => 'latest',
-               'endpoint' => 'http://host.docker.internal:4566',
-               'use_path_style_endpoint' => true,
-               'credentials' => [
-                   'key' => 'test',
-                   'secret' => 'test',
-               ],
+                'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+                'version' => 'latest',
+                'endpoint' => 'http://host.docker.internal:4566', //
+                'use_path_style_endpoint' => true,
+                'credentials' => [
+                    'key' => 'test',
+                    'secret' => 'test',
+                ],
                 'debug' => true,
             ]);
         });
 
+        $this->app->singleton(AMQPStreamConnection::class, function () {
+            return new AMQPStreamConnection(
+                config('rabbitmq.connections.rabbitmq.host', 'rabbitmq'),
+                config('queue.connections.rabbitmq.port', 5672),
+                config('queue.connections.rabbitmq.user', 'guest'),
+                config('queue.connections.rabbitmq.pass', 'guest'),
+            );
+        });
     }
 
     /**
@@ -90,6 +102,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Route::middlewareGroup('auth', [
+            Authenticate::class,
+        ]);
+
+        Route::middlewareGroup('user', [
+            RedirectIfAuthenticated::class,
+        ]);
     }
 }

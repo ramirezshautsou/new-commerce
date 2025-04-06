@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Http\Requests\ProducerRequest;
+use App\Http\Requests\CategoryRequest;
 use App\Repositories\Product\Interfaces\CategoryRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,7 +12,7 @@ class CategoryService
         protected CategoryRepositoryInterface $categoryRepository
     ) {}
 
-    public function updateCategory(ProducerRequest $request, int $categoryId): Model
+    public function updateCategory(CategoryRequest $request, int $categoryId): Model
     {
         $category = $this->categoryRepository->findById($categoryId);
         $category->update($request->validated());

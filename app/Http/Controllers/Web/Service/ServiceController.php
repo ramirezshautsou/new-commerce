@@ -47,7 +47,7 @@ class ServiceController extends Controller
             ->create($request->validated());
 
         return redirect(route('services.index'))
-            ->with('success', __('messages.create', [
+            ->with('success', __('messages.create_success', [
                 'name' => __('entities.service'),
             ]));
     }
@@ -102,12 +102,16 @@ class ServiceController extends Controller
      */
     public function destroy(int $serviceId): RedirectResponse
     {
-        $this->serviceService
-            ->deleteService($serviceId);
+        try {
+            $this->serviceService
+                ->deleteService($serviceId);
 
-        return redirect(route('services.index'))
-            ->with('success', __('messages.deleted_success', [
-                'name' => __('entities.service'),
-            ]));
+            return redirect(route('services.index'))
+                ->with('success', __('messages.deleted_success', [
+                    'name' => __('entities.service'),
+                ]));
+        } catch (\Exception $e) {
+            return back()->withErrors(__('messages.delete_failed'));
+        }
     }
 }

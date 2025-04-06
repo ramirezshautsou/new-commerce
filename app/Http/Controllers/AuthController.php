@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AuthRequest;
 use App\Http\Requests\LoginRequest;
 use App\Repositories\User\Interfaces\UserRepositoryInterface;
+use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
-class AuthController extends Controller
+final class AuthController extends Controller
 {
     /**
      * @param UserRepositoryInterface $userRepository
@@ -33,7 +35,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request): RedirectResponse
     {
         if ($this->userRepository->attemptLogin($request->validated())) {
-            return redirect()->intended('/');
+            return redirect(route('home'));
         }
 
         return back()->withErrors([
@@ -70,6 +72,6 @@ class AuthController extends Controller
     {
         $this->userRepository->logoutUser();
 
-        return redirect()->intended('/');
+        return redirect(route('home'));
     }
 }

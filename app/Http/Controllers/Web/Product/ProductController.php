@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use App\Services\CurrencyRateService;
+use App\Services\ProductExportQueueService;
 use App\Services\ProductExportService;
 use App\Services\ProductService;
 use Illuminate\Http\RedirectResponse;
@@ -24,7 +25,7 @@ class ProductController extends Controller
      */
     public function __construct(
         private ProductService         $productService,
-        protected ProductExportService $productExportService,
+        protected ProductExportQueueService $productExportService,
         protected CurrencyRateService  $currencyRateService,
     )
     {
@@ -55,18 +56,18 @@ class ProductController extends Controller
      */
     public function show(int $productId): View
     {
-        $product = Product::query()->findOrFail($productId);
+        $product = Product::query()->findOrFail($productId); //
 
         return view('products.show', [
             'product' => $this->productService
                 ->getProductById($productId),
             'convertedPrices' => [
                 'USD' => $this->currencyRateService
-                    ->convertCurrency($product->price, 'USD'),
+                    ->convertCurrency($product->price, 'USD'), //
                 'EUR' => $this->currencyRateService
-                    ->convertCurrency($product->price, 'EUR'),
+                    ->convertCurrency($product->price, 'EUR'), //
                 'RUB' => $this->currencyRateService
-                    ->convertCurrency($product->price, 'RUB'),
+                    ->convertCurrency($product->price, 'RUB'), //
             ]
         ]);
     }
@@ -116,7 +117,7 @@ class ProductController extends Controller
      */
     public function update(ProductRequest $request, int $productId): RedirectResponse
     {
-        $product = $this->productService
+        $this->productService
             ->updateProduct($productId, $request->validated());
 
         return redirect(route('products.index'))

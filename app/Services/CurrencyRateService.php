@@ -12,6 +12,7 @@ class CurrencyRateService
      * Обновление курсов валют
      *
      * @return void
+     *
      * @throws ConnectionException
      */
     public function updateRates(): void
