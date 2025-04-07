@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Product;
 use App\Repositories\Product\Interfaces\ProductRepositoryInterface;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductService
@@ -44,9 +44,9 @@ class ProductService
     /**
      * @param int $productId
      *
-     * @return Model
+     * @return Product
      */
-    public function getProductById(int $productId): Model
+    public function getProductById(int $productId): Product
     {
         return $this->productRepository->findById($productId);
     }
@@ -54,21 +54,20 @@ class ProductService
     /**
      * @param array $data
      *
-     * @return Model
+     * @return Product
      */
-    public function createProduct(array $data): Model
+    public function createProduct(array $data): Product
     {
-        return $this->productRepository
-            ->create($data);
+        return $this->productRepository->create($data);
     }
 
     /**
      * @param int $productId
      * @param array $data
      *
-     * @return Model
+     * @return Product
      */
-    public function updateProduct(int $productId, array $data): Model
+    public function updateProduct(int $productId, array $data): Product
     {
         $product = $this->getProductById($productId);
         $product->update($data);
@@ -85,5 +84,15 @@ class ProductService
     {
         $product = $this->getProductById($productId);
         $product->delete();
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return float
+     */
+    public function getProductPrice(int $productId): float
+    {
+        return $this->productRepository->price($productId);
     }
 }

@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AuthRequest;
 use App\Http\Requests\LoginRequest;
 use App\Repositories\User\Interfaces\UserRepositoryInterface;
-use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 final class AuthController extends Controller

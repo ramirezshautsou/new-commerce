@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ServiceRequest;
 use App\Repositories\Service\Interfaces\ServiceRepositoryInterface;
 use App\Services\ServiceService;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -110,7 +111,7 @@ class ServiceController extends Controller
                 ->with('success', __('messages.deleted_success', [
                     'name' => __('entities.service'),
                 ]));
-        } catch (\Exception $e) {
+        } catch (Exception) {
             return back()->withErrors(__('messages.delete_failed'));
         }
     }

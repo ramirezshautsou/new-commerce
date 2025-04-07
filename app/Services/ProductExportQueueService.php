@@ -35,9 +35,7 @@ class ProductExportQueueService
     public function exportAndQueue(): void
     {
         $products = $this->productRepository->getAll();
-
         $csvData = $this->generateCsvData($products);
-
         $this->rabbitMqConnector->publish(self::QUEUE_NAME, $csvData);
     }
 

@@ -4,7 +4,6 @@ namespace App\View\Composers;
 
 use App\Repositories\Product\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Product\Interfaces\ProducerRepositoryInterface;
-use App\Repositories\Product\Interfaces\ProductRepositoryInterface;
 use App\Repositories\Service\Interfaces\ServiceRepositoryInterface;
 use App\Services\ProductService;
 use Illuminate\View\View;

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\ProductExportQueueService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Throwable;
 
 class ProductMailController extends Controller
@@ -18,11 +17,9 @@ class ProductMailController extends Controller
     ) {}
 
     /**
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
-    public function export(Request $request): RedirectResponse
+    public function export(): RedirectResponse
     {
         try {
             $this->productExportQueueService->exportAndQueue();

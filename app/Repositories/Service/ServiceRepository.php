@@ -3,19 +3,18 @@
 namespace App\Repositories\Service;
 
 use App\Models\Service;
-use App\Repositories\BaseRepository;
 use App\Repositories\Service\Interfaces\ServiceRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class ServiceRepository extends BaseRepository implements ServiceRepositoryInterface
+class ServiceRepository implements ServiceRepositoryInterface
 {
     /**
      * @param Service $model
      */
-    public function __construct(Service $model)
-    {
-        parent::__construct($model);
-    }
+    public function __construct(
+        protected Service $model,
+    ) {}
 
     /**
      * @param int $limitPerPage
@@ -25,5 +24,36 @@ class ServiceRepository extends BaseRepository implements ServiceRepositoryInter
     public function paginate(int $limitPerPage): LengthAwarePaginator
     {
         return Service::query()->with('serviceType')->paginate($limitPerPage);
+    }
+
+    public function getAll(): Collection
+    {
+        return $this->model->all();
+    }
+
+    public function findById(int $id): Service
+    {
+        return $this->model->newQuery()->findOrFail($id);
+    }
+
+    public function create(array $data): Service
+    {
+        return $this->model->newQuery()->create($data);
+    }
+
+    public function update(int $id, array $data): Service
+    {
+        $service = $this->model->newQuery()->findOrFail($id);
+        $service->update($data);
+        return $service;
+    }
+
+    public function delete(int $id): bool
+    {
+        $service = $this->model->newQuery()->find($id);
+        if ($service) {
+            return $service->delete();
+        }
+        return false;
     }
 }

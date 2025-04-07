@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Http\Requests\ProducerRequest;
+use App\Models\Producer;
 use App\Repositories\Product\Interfaces\ProducerRepositoryInterface;
-use Illuminate\Database\Eloquent\Model;
 
 class ProducerService
 {
@@ -19,9 +19,9 @@ class ProducerService
      * @param ProducerRequest $request
      * @param int $producerId
      *
-     * @return Model
+     * @return Producer
      */
-    public function updateProducer(ProducerRequest $request, int $producerId): Model
+    public function updateProducer(ProducerRequest $request, int $producerId): Producer
     {
         $producer = $this->producerRepository
             ->findById($producerId);

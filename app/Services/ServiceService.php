@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Http\Requests\ServiceRequest;
+use App\Models\Service;
 use App\Repositories\Service\Interfaces\ServiceRepositoryInterface;
-use Illuminate\Database\Eloquent\Model;
 
 class ServiceService
 {
@@ -19,9 +19,9 @@ class ServiceService
      * @param ServiceRequest $request
      * @param int $serviceId
      *
-     * @return Model
+     * @return Service
      */
-    public function updateService(ServiceRequest $request, int $serviceId): Model
+    public function updateService(ServiceRequest $request, int $serviceId): Service
     {
         $service = $this->serviceRepository
             ->findById($serviceId);

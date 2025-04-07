@@ -14,6 +14,8 @@ use App\Repositories\Service\Interfaces\ServiceRepositoryInterface;
 use App\Repositories\Service\ServiceRepository;
 use App\Repositories\User\Interfaces\UserRepositoryInterface;
 use App\Repositories\User\UserRepository;
+use App\Repositories\UserRole\Interfaces\UserRoleRepositoryInterface;
+use App\Repositories\UserRole\UserRoleRepository;
 use App\View\Composers\CategoryComposer;
 use App\View\Composers\ProducerComposer;
 use App\View\Composers\ProductComposer;
@@ -38,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
             ProducerRepositoryInterface::class => ProducerRepository::class,
             ServiceRepositoryInterface::class => ServiceRepository::class,
             UserRepositoryInterface::class => UserRepository::class,
+            UserRoleRepositoryInterface::class => UserRoleRepository::class,
         ];
 
         foreach ($bindings as $interface => $implementation) {

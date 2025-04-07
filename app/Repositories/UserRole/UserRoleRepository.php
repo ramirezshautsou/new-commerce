@@ -3,15 +3,33 @@
 namespace App\Repositories\UserRole;
 
 use App\Models\Role;
-use App\Repositories\BaseRepository;
+use App\Repositories\UserRole\Interfaces\UserRoleRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 
-class UserRoleRepository extends BaseRepository
+class UserRoleRepository implements UserRoleRepositoryInterface
 {
     /**
      * @param Role $model
      */
-    public function __construct(Role $model)
+    public function __construct(
+        protected Role $model
+    ) {}
+
+    /**
+     * @return Collection
+     */
+    public function getAll(): Collection
     {
-        parent::__construct($model);
+        return $this->model->all();
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Role
+     */
+    public function findById(int $id): Role
+    {
+        return $this->model->newQuery()->findOrFail($id);
     }
 }

@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Http\Requests\UserRequest;
+use App\Models\User;
 use App\Repositories\User\Interfaces\UserRepositoryInterface;
-use Illuminate\Database\Eloquent\Model;
 
 class UserService
 {
@@ -19,9 +19,9 @@ class UserService
      * @param UserRequest $request
      * @param int $userId
      *
-     * @return Model
+     * @return User
      */
-    public function updateUser(UserRequest $request, int $userId): Model
+    public function updateUser(UserRequest $request, int $userId): User
     {
         $user = $this->userRepository
             ->findById($userId);

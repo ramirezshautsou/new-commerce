@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Http\Requests\CategoryRequest;
+use App\Models\Category;
 use App\Repositories\Product\Interfaces\CategoryRepositoryInterface;
-use Illuminate\Database\Eloquent\Model;
 
 class CategoryService
 {
@@ -19,9 +19,9 @@ class CategoryService
      * @param CategoryRequest $request
      * @param int $categoryId
      *
-     * @return Model
+     * @return Category
      */
-    public function updateCategory(CategoryRequest $request, int $categoryId): Model
+    public function updateCategory(CategoryRequest $request, int $categoryId): Category
     {
         $category = $this->categoryRepository->findById($categoryId);
         $category->update($request->validated());

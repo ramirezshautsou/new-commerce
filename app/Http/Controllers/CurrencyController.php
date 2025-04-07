@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\CurrencyRateService;
-use Illuminate\Http\Client\ConnectionException;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -18,7 +18,6 @@ final class CurrencyController extends Controller
 
     /**
      * @return RedirectResponse
-     * @throw ConnectionException
      */
     public function updateRates(): RedirectResponse
     {
@@ -26,7 +25,7 @@ final class CurrencyController extends Controller
             $this->currencyRateService->updateRates();
 
             return back()->with('success', __('messages.currency_updated_success'));
-        } catch (ConnectionException $e) {
+        } catch (Exception) {
             return back()->with('error', __('messages.currency_updated_fail'));
         }
 
@@ -37,8 +36,8 @@ final class CurrencyController extends Controller
      */
     public function showRates(): View
     {
-        $rates = $this->currencyRateService->getRates();
-
-        return view('admin.currency-rates', compact('rates'));
+        return view('admin.currency-rates', [
+            'rates' => $this->currencyRateService->getRates(),
+        ]);
     }
 }

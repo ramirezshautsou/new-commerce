@@ -10,7 +10,7 @@ class ServiceComposer extends BaseComposer
      * @param ServiceRepositoryInterface $serviceRepository
      */
     public function __construct(
-        ServiceRepositoryInterface $serviceRepository,
+        protected ServiceRepositoryInterface $serviceRepository,
     ) {
         parent::__construct([
             'services' => $serviceRepository,

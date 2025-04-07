@@ -2,8 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
-use App\Repositories\User\Interfaces\UserRepositoryInterface;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
