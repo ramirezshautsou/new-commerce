@@ -10,10 +10,18 @@ use Throwable;
 
 class ProductMailController extends Controller
 {
+    /**
+     * @param ProductExportQueueService $productExportQueueService
+     */
     public function __construct(
         private readonly ProductExportQueueService $productExportQueueService,
     ) {}
 
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function export(Request $request): RedirectResponse
     {
         try {

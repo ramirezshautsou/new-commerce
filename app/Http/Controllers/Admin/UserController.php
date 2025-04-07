@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
-use App\Models\User;
 use App\Repositories\User\Interfaces\UserRepositoryInterface;
-use App\Repositories\UserRole\UserRoleRepository;
 use App\Services\UserService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
@@ -120,6 +118,11 @@ class UserController extends Controller
             ]));
     }
 
+    /**
+     * @param int $userId
+     *
+     * @return Model
+     */
     private function findOrFail(int $userId): Model
     {
         return $this->userRepository->findById($userId)

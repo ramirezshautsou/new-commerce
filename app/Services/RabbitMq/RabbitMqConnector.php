@@ -45,6 +45,20 @@ class RabbitMqConnector implements RabbitMqPublisherInterface
     }
 
     /**
+     * @return AMQPChannel
+     *
+     * @throws Exception
+     */
+    public function getChannel(): AMQPChannel
+    {
+        if (!$this->channel) {
+            $this->connect();
+        }
+
+        return $this->channel;
+    }
+
+    /**
      * @param string $queue
      * @param string $message
      *

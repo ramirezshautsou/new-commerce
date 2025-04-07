@@ -18,7 +18,9 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (User::query()->findOrFail(auth()->id())->role_id !== 1) {
+        $user = auth()->user();
+
+        if ($user && $user->role_id !== 1) {
             return response()->view('errors.403');
         }
 

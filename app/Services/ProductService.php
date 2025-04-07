@@ -8,15 +8,26 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductService
 {
+    /**
+     * @param ProductRepositoryInterface $productRepository
+     */
     public function __construct(
         protected ProductRepositoryInterface $productRepository,
     ) {}
 
+    /**
+     * @param array $filters
+     * @param string $sortBy
+     * @param string $sortOrder
+     * @param int $limit
+     *
+     * @return LengthAwarePaginator
+     */
     public function getFilteredProducts(
         array  $filters,
         string $sortBy,
         string $sortOrder,
-        int    $limit
+        int    $limit,
     ): LengthAwarePaginator
     {
         $query = $this->productRepository
@@ -26,20 +37,37 @@ class ProductService
             ->sort($query, [
                 'field' => $sortBy,
                 'direction' => $sortOrder,
-            ])->paginate($limit);
+            ])
+            ->paginate($limit);
     }
 
+    /**
+     * @param int $productId
+     *
+     * @return Model
+     */
     public function getProductById(int $productId): Model
     {
         return $this->productRepository->findById($productId);
     }
 
+    /**
+     * @param array $data
+     *
+     * @return Model
+     */
     public function createProduct(array $data): Model
     {
         return $this->productRepository
             ->create($data);
     }
 
+    /**
+     * @param int $productId
+     * @param array $data
+     *
+     * @return Model
+     */
     public function updateProduct(int $productId, array $data): Model
     {
         $product = $this->getProductById($productId);
@@ -48,6 +76,11 @@ class ProductService
         return $product;
     }
 
+    /**
+     * @param int $productId
+     *
+     * @return void
+     */
     public function deleteProduct(int $productId): void
     {
         $product = $this->getProductById($productId);

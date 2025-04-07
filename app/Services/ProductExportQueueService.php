@@ -9,6 +9,16 @@ use Exception;
 class ProductExportQueueService
 {
     /**
+     * @const QUEUE_NAME
+     */
+    private const QUEUE_NAME = 'export_queue';
+
+    /**
+     * @const CSV_COLUMNS
+     */
+    private const CSV_COLUMNS = "ID;Name;Price\n";
+
+    /**
      * @param ProductRepository $productRepository
      * @param RabbitMqConnector $rabbitMqConnector
      */
@@ -28,7 +38,7 @@ class ProductExportQueueService
 
         $csvData = $this->generateCsvData($products);
 
-        $this->rabbitMqConnector->publish('export_queue', $csvData);
+        $this->rabbitMqConnector->publish(self::QUEUE_NAME, $csvData);
     }
 
     /**
@@ -38,7 +48,7 @@ class ProductExportQueueService
      */
     private function generateCsvData($products): string
     {
-        $csvData = "ID;Name;Price\n";
+        $csvData = self::CSV_COLUMNS;
         foreach ($products as $product) {
             $csvData .= $product->id . ";" . $product->name . ";" . $product->price . "\n";
         }

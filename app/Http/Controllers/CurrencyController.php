@@ -18,6 +18,7 @@ final class CurrencyController extends Controller
 
     /**
      * @return RedirectResponse
+     * @throw ConnectionException
      */
     public function updateRates(): RedirectResponse
     {

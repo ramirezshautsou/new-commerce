@@ -6,14 +6,20 @@ use Illuminate\Mail\Mailable;
 
 class ExportCompleted extends Mailable
 {
+    /**
+     * @param $downloadFilePath
+     */
     public function __construct(
         protected $downloadFilePath,
     ) {}
 
+    /**
+     * @return ExportCompleted
+     */
     public function build(): ExportCompleted
     {
-        return $this->from('belford2014@gmail.com') // ONLY VERIFIED EMAIL //
-            ->subject('Your Export is Ready') // lang
+        return $this->from(env('MAIL_ADMIN_ADDRESS'))
+            ->subject(__('emails.export_subject'))
             ->view('emails.exportCompleted')
             ->with(['downloadFilePath' => $this->downloadFilePath]);
     }

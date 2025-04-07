@@ -10,6 +10,20 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductRepository extends BaseRepository implements ProductRepositoryInterface
 {
+    private const FILTERS_FIELDS = [
+        'categories' => 'category_id',
+        'producers' => 'producer_id',
+        'price_min' => 'price',
+        'price_max' => 'price',
+    ];
+
+    private const SORT_DIRECTIONS = [
+        'default' => 'asc',
+        'reverse' => 'desc',
+    ];
+
+    private const DEFAULT_SORT_FIELD = 'name';
+
     /**
      * @param Product $model
      */
@@ -30,20 +44,14 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
 
     /**
      * @param array $filterArray
+     *
      * @return Builder
      */
     public function filter(array $filterArray): Builder
     {
         $query = $this->model->newQuery();
 
-        $filters = [
-            'categories' => 'category_id',
-            'producers' => 'producer_id',
-            'price_min' => 'price',
-            'price_max' => 'price',
-        ];
-
-        foreach ($filters as $filter => $column) {
+        foreach (self::FILTERS_FIELDS as $filter => $column) {
             if (!empty($filterArray[$filter])) {
                 $operator = ($filter === 'price_min') ? '>=' : ($filter === 'price_max' ? '<=' : '=');
                 $value = $filterArray[$filter];
@@ -67,11 +75,11 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
      */
     public function sort(Builder $query, array $sortArray): Builder
     {
-        $field = $sortArray['field'] ?? 'name';
-        $direction = $sortArray['direction'] ?? 'asc';
+        $field = $sortArray['field'] ?? self::DEFAULT_SORT_FIELD;
+        $direction = $sortArray['direction'] ?? self::SORT_DIRECTIONS['default'];
 
-        if (!in_array($direction, ['asc', 'desc'])) {
-            $direction = 'asc';
+        if (!in_array($direction, self::SORT_DIRECTIONS)) {
+            $direction = self::SORT_DIRECTIONS['default'];
         }
 
         $query->orderBy($field, $direction);

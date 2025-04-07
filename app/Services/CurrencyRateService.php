@@ -2,71 +2,83 @@
 
 namespace App\Services;
 
+use App\Enums\Currency;
 use App\Models\CurrencyRate;
+use Exception;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class CurrencyRateService
 {
     /**
-     * Обновление курсов валют
-     *
+     * @const ALLOWED_CURRENCIES
+     */
+    private const ALLOWED_CURRENCIES = ['USD', 'RUB', 'EUR'];
+
+    /**
      * @return void
      *
      * @throws ConnectionException
+     * @throws Exception
      */
     public function updateRates(): void
     {
-        // Получаем данные с API
-        $response = Http::withOptions([
-            'verify' => false,
-        ])->get(env('RATES_URL'));
+        try {
+            $response = Http::withOptions([
+                'verify' => false,
+            ])->get(env('RATES_URL'));
 
-        // Проверяем, успешен ли запрос
-        if ($response->successful()) {
-            // Получаем XML данные
-            $xml = simplexml_load_string($response->body());
-
-            // Преобразуем XML в массив
-            $rates = json_decode(json_encode($xml), true);
-
-            // Если курсы валют пустые, выведем ошибку
-            if (empty($rates)) {
-                dd('API returned empty rates:', $rates);
+            if ($response->failed()) {
+                throw new ConnectionException('Request failed with status: ' . $response->status());
             }
 
-            // Проверяем, что $rates является массивом
-            if (is_array($rates)) {
-                // Обновляем или создаём новые записи
+            $xml = simplexml_load_string($response->body());
+
+            if ($xml === false) {
+                throw new Exception('Invalid XML response');
+            }
+
+            $rates = json_decode(json_encode($xml), true);
+
+            if (empty($rates)) {
+                Log::warning('API returned empty rates.', ['response' => $rates]);
+                return;
+            }
+
+            if (isset($rates['filials']['filial'])) {
                 foreach ($rates['filials']['filial'] as $filial) {
                     foreach ($filial['rates']['value'] as $value) {
-                        // Извлекаем валюту и курс
                         $currencyCode = (string)$value['@attributes']['iso'];
-                        $rate = (float)$value['@attributes']['sale'];
 
-                        // Проверяем, что курс является числом
-                        if (is_numeric($rate)) {
-                            CurrencyRate::query()->updateOrCreate(
-                                ['currency' => $currencyCode], // Параметры для поиска
-                                ['rate' => $rate] // Данные для обновления
-                            );
-                        } else {
-                            dd("Invalid rate value for currency $currencyCode: $rate");
+                        if (in_array($currencyCode, self::ALLOWED_CURRENCIES)) {
+                            $rate = (float)$value['@attributes']['sale'];
+
+                            if (is_numeric($rate)) {
+                                CurrencyRate::query()->updateOrCreate(
+                                    ['currency' => $currencyCode],
+                                    ['rate' => $rate],
+                                );
+                            } else {
+                                Log::error("Invalid rate value for currency $currencyCode: $rate");
+                            }
                         }
                     }
                 }
             } else {
-                dd('The response is not a valid XML structure:', $rates);
+                Log::error("Invalid rate value for currency $currencyCode: $rate");
             }
-        } else {
-            // Если запрос не успешен, выводим ошибку
-            dd('Request failed:', $response->status(), $response->body());
+        } catch (ConnectionException $e) {
+            Log::error('Connection error while fetching currency rates: ' . $e->getMessage());
+            throw new Exception('Failed to fetch currency rates from the API.');
+        } catch
+        (Exception $e) {
+            Log::error('Error while updating currency rates: ' . $e->getMessage());
+            throw new Exception('An error occurred while updating currency rates.');
         }
     }
 
     /**
-     * Получить все курсы валют из базы данных
-     *
      * @return array
      */
     public function getRates(): array
@@ -74,11 +86,40 @@ class CurrencyRateService
         return CurrencyRate::all()->pluck('rate', 'currency')->toArray();
     }
 
+    /**
+     * @param float $amount
+     * @param string $toCurrency
+     *
+     * @return float|null
+     */
     public function convertCurrency(float $amount, string $toCurrency): ?float
     {
         $rates = $this->getRates();
 
-        return isset($rates[$toCurrency]) ? round($amount / $rates[$toCurrency], 2) : null;
+        if (isset($rates[$toCurrency])) {
+            return round($amount / $rates[$toCurrency], 2);
+        }
+
+        Log::warning("Currency $toCurrency not found in rates.");
+
+        return null;
+    }
+
+    /**
+     * @param float $amount
+     * @param array $currencies
+     *
+     * @return array
+     */
+    public function getConvertedPrices(float $amount, array $currencies): array
+    {
+        $convertedPrices = [];
+
+        foreach ($currencies as $currency) {
+            $convertedPrices[$currency] = $this->convertCurrency($amount, $currency);
+        }
+
+        return $convertedPrices;
     }
 }
 

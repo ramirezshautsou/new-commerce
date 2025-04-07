@@ -9,6 +9,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use PhpAmqpLib\Message\AMQPMessage;
 use App\Services\RabbitMq\RabbitMqConnector;
+use Throwable;
 
 class ListenQueue extends Command
 {
@@ -22,34 +23,33 @@ class ListenQueue extends Command
      */
     protected $description = 'Listen to the export queue';
 
-    private $channel;
+    /**
+     * @const LISTEN_QUEUE_NAME
+     */
+    private const LISTEN_QUEUE_NAME = 'export_queue';
 
     /**
      * @param S3Client $s3Client
      * @param RabbitMqConnector $rabbitMqConnector
      */
     public function __construct(
-        protected S3Client $s3Client,
-        protected RabbitMqConnector $rabbitMqConnector
-    ) {
+        protected S3Client          $s3Client,
+        protected RabbitMqConnector $rabbitMqConnector,
+    )
+    {
         parent::__construct();
     }
 
     /**
      * @return void
-     *
-     * @throws Exception
      */
     public function handle(): void
     {
         try {
-            // Получаем канал с помощью RabbitMqConnector
-            $connection = $this->rabbitMqConnector->connect();
-            $this->channel = $connection->channel();
+            $channel = $this->rabbitMqConnector->getChannel();
 
-            // Начинаем прослушивание очереди
-            $this->channel->basic_consume(
-                'export_queue',
+            $channel->basic_consume(
+                self::LISTEN_QUEUE_NAME,
                 '',
                 false,
                 true,
@@ -60,9 +60,8 @@ class ListenQueue extends Command
                 }
             );
 
-            // Ожидаем сообщений в очереди
-            while ($this->channel->is_consuming()) {
-                $this->channel->wait();
+            while ($channel->is_consuming()) {
+                $channel->wait();
             }
 
         } catch (Exception $e) {
@@ -73,8 +72,6 @@ class ListenQueue extends Command
     }
 
     /**
-     * Обработка сообщения из очереди
-     *
      * @param string $csvData
      *
      * @return void
@@ -84,17 +81,17 @@ class ListenQueue extends Command
         try {
             $fileName = $this->uploadToS3($csvData);
             $this->sendExportCompletedEmail($fileName);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->error('Error processing message: ' . $e->getMessage());
         }
     }
 
     /**
-     * Загрузка CSV файла на S3
-     *
      * @param string $csvData
      *
      * @return string
+     *
+     * @throws Exception
      */
     private function uploadToS3(string $csvData): string
     {
@@ -114,8 +111,6 @@ class ListenQueue extends Command
     }
 
     /**
-     * Отправка письма об окончании экспорта
-     *
      * @param string $fileName
      *
      * @return void
@@ -124,15 +119,14 @@ class ListenQueue extends Command
     {
         try {
             $downloadUrl = $this->generateDownloadUrl($fileName);
-            Mail::to('test@test.com')->send(new ExportCompleted($downloadUrl));
+            Mail::to(env('MAIL_ADMIN_ADDRESS'))
+                ->send(new ExportCompleted($downloadUrl));
         } catch (Exception $e) {
             $this->error('Error sending email: ' . $e->getMessage());
         }
     }
 
     /**
-     * Генерация URL для скачивания файла
-     *
      * @param string $fileName
      *
      * @return string
@@ -146,18 +140,12 @@ class ListenQueue extends Command
     }
 
     /**
-     * Очистка ресурсов (закрытие канала и соединения)
+     * @return void
      */
     private function cleanup(): void
     {
         try {
-            if ($this->channel) {
-                $this->channel->close();
-            }
-
-            if (isset($connection) && $connection) {
-                $connection->close();
-            }
+            $this->rabbitMqConnector->close();
         } catch (Exception $e) {
             $this->error('Error during cleanup: ' . $e->getMessage());
         }

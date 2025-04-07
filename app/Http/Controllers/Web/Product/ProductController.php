@@ -7,7 +7,6 @@ use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use App\Services\CurrencyRateService;
 use App\Services\ProductExportQueueService;
-use App\Services\ProductExportService;
 use App\Services\ProductService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,15 +20,30 @@ class ProductController extends Controller
     private const PAGE_LIMIT = 15;
 
     /**
+     * @const FILTER_COLUMNS
+     */
+    private const FILTER_COLUMNS = ['categories', 'producers', 'price_min', 'price_max'];
+
+    /**
+     * @const DEFAULT_SORT_COLUMN_NAME
+     */
+    private const DEFAULT_SORT_COLUMN_NAME = 'id';
+
+    /**
+     * @const DEFAULT_SORT_DIRECTION
+     */
+    private const DEFAULT_SORT_DIRECTION = 'asc';
+
+    /**
      * @param ProductService $productService
+     * @param ProductExportQueueService $productExportService
+     * @param CurrencyRateService $currencyRateService
      */
     public function __construct(
-        private ProductService         $productService,
+        protected ProductService         $productService,
         protected ProductExportQueueService $productExportService,
         protected CurrencyRateService  $currencyRateService,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @param Request $request
@@ -38,14 +52,13 @@ class ProductController extends Controller
      */
     public function index(Request $request): View
     {
+        $filters = $request->only(self::FILTER_COLUMNS);
+        $sortBy = $request->query('sort_by', self::DEFAULT_SORT_COLUMN_NAME);
+        $sortDirection = $request->query('sort_order', self::DEFAULT_SORT_DIRECTION);
+
         return view('products.index', [
             'products' => $this->productService
-                ->getFilteredProducts(
-                    $request->only(['categories', 'producers', 'price_min', 'price_max']),
-                    $request->query('sort_by', 'id'),
-                    $request->query('sort_order', 'asc'),
-                    self::PAGE_LIMIT,
-                ),
+                ->getFilteredProducts($filters, $sortBy, $sortDirection, self::PAGE_LIMIT),
         ]);
     }
 

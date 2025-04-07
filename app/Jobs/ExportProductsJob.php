@@ -7,6 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class ExportProductsJob implements ShouldQueue
 {
@@ -14,6 +16,11 @@ class ExportProductsJob implements ShouldQueue
 
     public function handle(ProductExportQueueService $productExportQueueService): void
     {
-        $productExportQueueService->exportAndQueue();
+        try {
+            $productExportQueueService->exportAndQueue();
+        } catch (Throwable $e) {
+            Log::error('ExportProductsJob failed', ['error' => $e->getMessage()]);
+            $this->fail($e);
+        }
     }
 }

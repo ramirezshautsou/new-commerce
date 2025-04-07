@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Web\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
-use App\Http\Requests\ProducerRequest;
 use App\Repositories\Product\Interfaces\CategoryRepositoryInterface;
 use App\Services\CategoryService;
 use Illuminate\Http\RedirectResponse;

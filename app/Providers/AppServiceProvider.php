@@ -28,19 +28,22 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * @return void
      */
     public function register(): void
     {
-        $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
+        $bindings = [
+            ProductRepositoryInterface::class => ProductRepository::class,
+            CategoryRepositoryInterface::class => CategoryRepository::class,
+            ProducerRepositoryInterface::class => ProducerRepository::class,
+            ServiceRepositoryInterface::class => ServiceRepository::class,
+            UserRepositoryInterface::class => UserRepository::class,
+        ];
 
-        $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
+        foreach ($bindings as $interface => $implementation) {
+            $this->app->bind($interface, $implementation);
+        }
 
-        $this->app->bind(ProducerRepositoryInterface::class, ProducerRepository::class);
-
-        $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
-
-        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
 
         View::composer([
             'products.create',
@@ -98,7 +101,7 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
+     * @return void
      */
     public function boot(): void
     {
