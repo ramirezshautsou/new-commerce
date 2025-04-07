@@ -5,9 +5,9 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                     <a href="{{ route('producers.show', $producer->id) }}"
-                       class="btn btn-sm btn-outline-secondary">View</a>
+                       class="btn btn-sm btn-outline-secondary" style="text-decoration: none; color: #007bff;">View</a>
                     <a href="{{ route('producers.edit', $producer->id) }}"
-                       class="btn btn-sm btn-outline-secondary">Edit</a>
+                       class="btn btn-sm btn-outline-secondary" style="text-decoration: none; color: #007bff;">Edit</a>
                 </div>
             </div>
         </div>

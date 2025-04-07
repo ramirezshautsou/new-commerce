@@ -3,10 +3,10 @@
 @section('title', 'Products')
 
 @section('content')
-    <section class="mt-7 py-5 text-center container">
-        <h1>Products</h1>
+    <section class="mt-5 py-5 text-center container" style="">
+        <h1 class="mb-4">Products</h1>
 
-        <div class="mb-4">
+        <div class="mb-4 p-4 border rounded shadow-sm" style="background-color: #f9f9f9;">
             <form action="{{ route('products.index') }}" method="GET">
                 <div class="row">
                     <div class="col-md-3">
@@ -54,6 +54,12 @@
             </form>
         </div>
 
+        @if($products->isEmpty())
+            <div class="alert alert-warning" role="alert">
+                No products found based on the selected filters.
+            </div>
+        @endif
+
         @auth
             @if(auth()->user()?->role->name === 'admin')
                 <a href="{{ route('products.create') }}" class="btn btn-success mb-3">Create Product</a>
@@ -67,29 +73,29 @@
                     @if(auth()->user()?->role->name === 'admin')
                         <th>
                             <a href="{{ route('products.index', ['sort_by' => 'id', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc']) }}">
-                                ID
+                                ID <i class="bi {{ request('sort_by') == 'id' ? (request('sort_order') == 'asc' ? 'bi-arrow-up' : 'bi-arrow-down') : 'bi-arrow-down-up' }}"></i>
                             </a>
                         </th>
                     @endif
                 @endauth
                 <th>
                     <a href="{{ route('products.index', array_merge(request()->all(), ['sort_by' => 'name', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
-                        Name
+                        Name <i class="bi {{ request('sort_by') == 'name' ? (request('sort_order') == 'asc' ? 'bi-arrow-up' : 'bi-arrow-down') : 'bi-arrow-down-up' }}"></i>
                     </a>
                 </th>
                 <th>
                     <a href="{{ route('products.index', array_merge(request()->all(), ['sort_by' => 'category_id', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
-                        Category
+                        Category <i class="bi {{ request('sort_by') == 'category_id' ? (request('sort_order') == 'asc' ? 'bi-arrow-up' : 'bi-arrow-down') : 'bi-arrow-down-up' }}"></i>
                     </a>
                 </th>
                 <th>
                     <a href="{{ route('products.index', array_merge(request()->all(), ['sort_by' => 'producer_id', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
-                        Producer
+                        Producer <i class="bi {{ request('sort_by') == 'producer_id' ? (request('sort_order') == 'asc' ? 'bi-arrow-up' : 'bi-arrow-down') : 'bi-arrow-down-up' }}"></i>
                     </a>
                 </th>
                 <th>
                     <a href="{{ route('products.index', array_merge(request()->all(), ['sort_by' => 'price', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
-                        Price
+                        Price <i class="bi {{ request('sort_by') == 'price' ? (request('sort_order') == 'asc' ? 'bi-arrow-up' : 'bi-arrow-down') : 'bi-arrow-down-up' }}"></i>
                     </a>
                 </th>
                 @auth
@@ -108,7 +114,7 @@
                         @endif
                     @endauth
                     <td>
-                        <a href="{{ route('products.show', $product) }}">{{ $product->name }}</a>
+                        <a href="{{ route('products.show', $product) }}" class="product-link">{{ $product->name }}</a>
                     </td>
                     <td>{{ $product->category->name ?? 'N/A' }}</td>
                     <td>{{ $product->producer->name ?? 'N/A' }}</td>
@@ -135,3 +141,66 @@
         {{ $products->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
     </div>
 @endsection
+
+<style>
+    .product-link {
+        text-decoration: none;
+        color: #007bff;
+        position: relative;
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .product-link:hover {
+        color: #0056b3;
+        transform: scale(1.05);
+    }
+
+    .product-link::after {
+        content: ' →';
+        font-size: 0.9em;
+        color: #007bff;
+    }
+
+    .product-link:hover::after {
+        content: ' ←';
+        color: #0056b3;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .table a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .btn-outline-secondary {
+        font-size: 1.1rem;
+        padding: 10px 20px;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #0056b3;
+        color: white;
+        border-color: #0056b3;
+    }
+
+    .btn-primary {
+        border-radius: 30px;
+        padding: 8px 20px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        color: white;
+    }
+
+    .alert-warning {
+        border-radius: 8px;
+    }
+</style>

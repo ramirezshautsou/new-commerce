@@ -4,7 +4,9 @@
 <body>
 @include('layouts.navbar')
 
-@include('layouts.main')
+<main>
+    @yield('content')
+</main>
 
 @include('layouts.footer')
 
@@ -14,8 +16,8 @@
     </script>
 @endif
 
+<script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 
-<script src="{{ asset('js/bootstrap.bundle.min.js')}}"></script>
-
+@stack('scripts')
 </body>
 </html>

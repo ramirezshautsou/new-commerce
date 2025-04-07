@@ -19,12 +19,8 @@
 </svg>
 
 <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
-    <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"
-            id="bd-theme"
-            type="button"
-            aria-expanded="false"
-            data-bs-toggle="dropdown"
-            aria-label="Toggle theme (auto)">
+    <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme"
+            type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (auto)">
         <svg class="bi my-1 theme-icon-active" width="1em" height="1em">
             <use href="#circle-half"></use>
         </svg>
@@ -32,8 +28,7 @@
     </button>
     <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
         <li>
-            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light"
-                    aria-pressed="false">
+            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light">
                 <svg class="bi me-2 opacity-50" width="1em" height="1em">
                     <use href="#sun-fill"></use>
                 </svg>
@@ -44,8 +39,7 @@
             </button>
         </li>
         <li>
-            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark"
-                    aria-pressed="false">
+            <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark">
                 <svg class="bi me-2 opacity-50" width="1em" height="1em">
                     <use href="#moon-stars-fill"></use>
                 </svg>
@@ -56,8 +50,7 @@
             </button>
         </li>
         <li>
-            <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto"
-                    aria-pressed="true">
+            <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto">
                 <svg class="bi me-2 opacity-50" width="1em" height="1em">
                     <use href="#circle-half"></use>
                 </svg>
@@ -70,14 +63,13 @@
     </ul>
 </div>
 
-
-<header data-bs-theme="dark" class="fixed-top">
+<header class="fixed-top" data-bs-theme="dark">
     <div class="collapse text-bg-dark" id="navbarHeader">
         <div class="container">
             <div class="row">
                 <div class="col-sm-8 col-md-7 py-4">
                     <h4>About</h4>
-                    <p>My name Raman Shautsou. I'm PHP Developer</p>
+                    <p>My name is Raman Shautsou. I'm a PHP Developer.</p>
                 </div>
                 <div class="col-sm-4 offset-md-1 py-4">
                     <h4>Contact</h4>
@@ -102,13 +94,12 @@
                         <a href="{{ route('auth.login') }}" class="navbar-brand align-items-center">Login</a>
                         <a href="{{ route('auth.registration') }}" class="navbar-brand align-items-center">Registration</a>
                     @endguest
-
-                @auth
-                    <form method="POST" action="{{ route('auth.logout') }}">
-                        @csrf
-                        <input type="submit" class="navbar-brand align-items-center justify-content-center" value="Выйти">
-                    </form>
-                @endauth
+                    @auth
+                        <form method="POST" action="{{ route('auth.logout') }}">
+                            @csrf
+                            <input type="submit" class="navbar-brand align-items-center justify-content-center" value="Log out">
+                        </form>
+                    @endauth
                 </div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
                         aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation" id="navbarButton">
@@ -118,3 +109,4 @@
         </div>
     </div>
 </header>
+

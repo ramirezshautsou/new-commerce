@@ -3,10 +3,10 @@
 @section('title', 'Market')
 
 @section('content')
-    <section class="mt-7 py-5 text-center container">
+    <section class="mt-5 py-3 text-center container">
         <h1>Product market with best prices</h1>
         @auth
-            <h2>Добро пожаловать, {{ Auth::user()->name }}!</h2>
+            <h2>Nice to see you, {{ Auth::user()->name }}!</h2>
         @endauth
         <div class="d-flex gap-3" style="align-items: center; justify-content: center">
             @auth
@@ -17,9 +17,9 @@
                     <a href="{{ route('services.index') }}" class="btn btn-primary">Check all services</a>
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-primary">Check all users</a>
                     <a href="{{ route('admin.currency-rates') }}" class="btn btn-primary">Check actual currency</a>
-                    <form action="{{ route('admin.export') }}" method="GET">
+                    <form action="{{ route('admin.export') }}" method="GET" class="d-inline">
                         @csrf
-                        <button type="submit">Экспортировать товары</button>
+                        <button type="submit" class="btn btn-secondary">Export all products</button>
                     </form>
                 @endif
             @endauth
