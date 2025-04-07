@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Product;
 
+use App\Filters\ProductFilter;
+use App\Filters\ProductSorter;
 use App\Models\Product;
 use App\Repositories\BaseRepository;
 use App\Repositories\Product\Interfaces\ProductRepositoryInterface;
@@ -10,6 +12,9 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductRepository extends BaseRepository implements ProductRepositoryInterface
 {
+    /**
+     * @const FILTERS_FIELDS
+     */
     private const FILTERS_FIELDS = [
         'categories' => 'category_id',
         'producers' => 'producer_id',
@@ -17,18 +22,29 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         'price_max' => 'price',
     ];
 
+    /**
+     * @const SORT_DIRECTIONS
+     */
     private const SORT_DIRECTIONS = [
         'default' => 'asc',
         'reverse' => 'desc',
     ];
 
+    /**
+     * @const DEFAULT_SORT_FIELD
+     */
     private const DEFAULT_SORT_FIELD = 'name';
 
     /**
      * @param Product $model
+     * @param ProductFilter $productFilter
+     * @param ProductSorter $productSorter
      */
-    public function __construct(Product $model)
-    {
+    public function __construct(
+        Product $model,
+        protected ProductFilter $productFilter,
+        protected ProductSorter $productSorter,
+    ) {
         parent::__construct($model);
     }
 
@@ -51,20 +67,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     {
         $query = $this->model->newQuery();
 
-        foreach (self::FILTERS_FIELDS as $filter => $column) {
-            if (!empty($filterArray[$filter])) {
-                $operator = ($filter === 'price_min') ? '>=' : ($filter === 'price_max' ? '<=' : '=');
-                $value = $filterArray[$filter];
-
-                if (is_array($value)) {
-                    $query->whereIn($column, $value);
-                } else {
-                    $query->where($column, $operator, $value);
-                }
-            }
-        }
-
-        return $query;
+        return $this->productFilter->applyFilter($query, $filterArray);
     }
 
     /**
@@ -75,15 +78,6 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
      */
     public function sort(Builder $query, array $sortArray): Builder
     {
-        $field = $sortArray['field'] ?? self::DEFAULT_SORT_FIELD;
-        $direction = $sortArray['direction'] ?? self::SORT_DIRECTIONS['default'];
-
-        if (!in_array($direction, self::SORT_DIRECTIONS)) {
-            $direction = self::SORT_DIRECTIONS['default'];
-        }
-
-        $query->orderBy($field, $direction);
-
-        return $query;
+        return $this->productSorter->applySort($query, $sortArray);
     }
 }

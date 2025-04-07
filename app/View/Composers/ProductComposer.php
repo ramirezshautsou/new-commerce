@@ -15,6 +15,7 @@ class ProductComposer extends BaseComposer
      * @param CategoryRepositoryInterface $categoryRepository
      * @param ProducerRepositoryInterface $producerRepository
      * @param ServiceRepositoryInterface $serviceRepository
+     * @param ProductService $productService
      */
     public function __construct(
         protected CategoryRepositoryInterface $categoryRepository,

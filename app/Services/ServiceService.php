@@ -8,10 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class ServiceService
 {
+    /**
+     * @param ServiceRepositoryInterface $serviceRepository
+     */
     public function __construct(
         protected ServiceRepositoryInterface $serviceRepository,
     ) {}
 
+    /**
+     * @param ServiceRequest $request
+     * @param int $serviceId
+     *
+     * @return Model
+     */
     public function updateService(ServiceRequest $request, int $serviceId): Model
     {
         $service = $this->serviceRepository
@@ -21,6 +30,11 @@ class ServiceService
         return $service;
     }
 
+    /**
+     * @param int $serviceId
+     *
+     * @return void
+     */
     public function deleteService(int $serviceId): void
     {
         $serviceId = $this->serviceRepository

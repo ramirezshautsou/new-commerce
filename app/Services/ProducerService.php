@@ -8,10 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProducerService
 {
+    /**
+     * @param ProducerRepositoryInterface $producerRepository
+     */
     public function __construct(
         protected ProducerRepositoryInterface $producerRepository,
     ) {}
 
+    /**
+     * @param ProducerRequest $request
+     * @param int $producerId
+     *
+     * @return Model
+     */
     public function updateProducer(ProducerRequest $request, int $producerId): Model
     {
         $producer = $this->producerRepository
@@ -21,6 +30,11 @@ class ProducerService
         return $producer;
     }
 
+    /**
+     * @param int $producerId
+     *
+     * @return void
+     */
     public function deleteProducer(int $producerId): void
     {
         $producer = $this->producerRepository

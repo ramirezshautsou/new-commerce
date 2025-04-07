@@ -8,10 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserService
 {
+    /**
+     * @param UserRepositoryInterface $userRepository
+     */
     public function __construct(
         protected UserRepositoryInterface $userRepository,
     ) {}
 
+    /**
+     * @param UserRequest $request
+     * @param int $userId
+     *
+     * @return Model
+     */
     public function updateUser(UserRequest $request, int $userId): Model
     {
         $user = $this->userRepository
@@ -21,6 +30,11 @@ class UserService
         return $user;
     }
 
+    /**
+     * @param int $userId
+     *
+     * @return void
+     */
     public function deleteUser(int $userId): void
     {
         $user = $this->userRepository
