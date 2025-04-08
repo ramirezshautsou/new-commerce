@@ -91,7 +91,7 @@ class ServiceController extends Controller
             ->updateService($request, $serviceId);
 
         return redirect(route('services.index'))
-            ->with('success', __('messages.updated_success', [
+            ->with('success', __('messages.update_success', [
                 'name' => __('entities.service'),
             ]));
     }
@@ -108,7 +108,7 @@ class ServiceController extends Controller
                 ->deleteService($serviceId);
 
             return redirect(route('services.index'))
-                ->with('success', __('messages.deleted_success', [
+                ->with('success', __('messages.delete_success', [
                     'name' => __('entities.service'),
                 ]));
         } catch (Exception) {

@@ -22,7 +22,7 @@ class ProductRequest extends FormRequest
         return [
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
-            'alias' => 'required|string|max:255|unique:products,alias,' . $this->route('product'),
+            'alias' => 'required|string|max:255|unique:products,alias,' . ($this->route('product') ?: 'NULL'),
             'description' => 'nullable|string|max:1000',
             'producer_id' => 'required|exists:producers,id',
             'production_date' => 'nullable|date|required_with:price',

@@ -19,7 +19,7 @@ class ExportProductsJob implements ShouldQueue
         try {
             $productExportQueueService->exportAndQueue();
         } catch (Throwable $e) {
-            Log::error('ExportProductsJob failed', ['error' => $e->getMessage()]);
+            Log::error(__('jobs.export_products_failed'), ['error' => $e->getMessage()]);
             $this->fail($e);
         }
     }

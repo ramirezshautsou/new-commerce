@@ -21,8 +21,8 @@ class UserRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $this->route('user'),
-            'password' => $this->isCreating() ? 'required|string|min:8' : 'nullable|string|min:8',
+            'email' => 'required|email|unique:users,email,' . ($this->route('user') ?: 'NULL'),
+            'password' => $this->isCreatingRequest() ? 'required|string|min:8' : 'nullable|string|min:8',
             'role_id' => 'required|exists:roles,id'
         ];
     }
@@ -72,7 +72,7 @@ class UserRequest extends FormRequest
     /**
      * @return bool
      */
-    private function isCreating(): bool
+    private function isCreatingRequest(): bool
     {
         return $this->isMethod('post');
     }

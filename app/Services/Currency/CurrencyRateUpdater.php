@@ -20,7 +20,7 @@ class CurrencyRateUpdater
     public function update(array $rates): void
     {
         if (!isset($rates['filials']['filial'])) {
-            Log::error("Missing filials in currency rates");
+            Log::error(__('messages.missing_filials'));
             return;
         }
 
@@ -35,7 +35,9 @@ class CurrencyRateUpdater
                         ['rate' => (float)$sale]
                     );
                 } else {
-                    Log::warning("Skipped currency entry: " . json_encode($value));
+                    Log::warning(__('messages.skipped_currency', [
+                        'currency' => json_encode($value),
+                    ]));
                 }
             }
         }

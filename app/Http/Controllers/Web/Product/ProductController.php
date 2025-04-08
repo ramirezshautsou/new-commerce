@@ -103,7 +103,7 @@ class ProductController extends Controller
             ->createProduct($request->validated());
 
         return redirect(route('products.index'))
-            ->with('success', __('messages.created_success', [
+            ->with('success', __('messages.create_success', [
                 'name' => __('entities.product'),
             ]));
     }
@@ -136,7 +136,7 @@ class ProductController extends Controller
             );
 
         return redirect(route('products.index'))
-            ->with('success', __('messages.updated_success', [
+            ->with('success', __('messages.update_success', [
                 'name' => __('entities.product'),
             ]));
     }
@@ -152,7 +152,7 @@ class ProductController extends Controller
             ->deleteProduct($productId);
 
         return redirect(route('products.index'))
-            ->with('success', __('messages.deleted_success', [
+            ->with('success', __('messages.delete_success', [
                 'name' => __('entities.product'),
             ]));
     }

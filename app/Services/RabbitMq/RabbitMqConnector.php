@@ -79,8 +79,8 @@ class RabbitMqConnector implements RabbitMqPublisherInterface
                 $queue
             );
         } catch (Exception $e) {
-            throw new Exception("RabbitMQ publish failed: " . $e->getMessage(), $e->getCode(), $e);
-        }
+            $errorMessage = __('messages.rabbitmq_publish_failed', ['error' => $e->getMessage()]);
+            throw new Exception($errorMessage, $e->getCode(), $e);        }
     }
 
     /**

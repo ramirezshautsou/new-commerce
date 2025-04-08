@@ -3,6 +3,7 @@
 namespace App\Services\Export;
 
 use Aws\S3\S3Client;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ExportCompleted;
 use Exception;
@@ -33,7 +34,7 @@ class ExportProcessor
             $fileName = $this->uploadToS3($csvData);
             $this->sendExportCompletedEmail($fileName);
         } catch (Throwable $e) {
-            throw new Exception('Export processing failed: ' . $e->getMessage());
+            throw new Exception(__('messages.export_failed', ['error' => $e->getMessage()]));
         }
     }
 
@@ -66,5 +67,7 @@ class ExportProcessor
 
         Mail::to(env('MAIL_ADMIN_ADDRESS'))
             ->send(new ExportCompleted($downloadUrl));
+
+        Log::info(__('messages.export_completed', ['link' => $downloadUrl]));
     }
 }

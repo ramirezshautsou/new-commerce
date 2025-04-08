@@ -21,7 +21,7 @@ class ServiceRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'alias' => 'required|string|max:255|unique:services,alias,' . $this->route('service'),
+            'alias' => 'required|string|max:255|unique:services,alias,' . ($this->route('service') ?? 'NULL'),
             'target_date' => 'nullable|date|required_with:price',
             'price' => 'nullable|numeric|min:0|max:99999999.99',
         ];

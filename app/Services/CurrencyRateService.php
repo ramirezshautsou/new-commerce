@@ -33,8 +33,9 @@ class CurrencyRateService
             $raw = $this->fetcher->fetch();
             $this->updater->update($raw);
         } catch (Throwable $e) {
-            Log::error('Currency update failed: ' . $e->getMessage());
-            throw new Exception('Currency rate update error.');
+            $errorMessage = __('messages.currency_updated_fail', ['error' => $e->getMessage()]);
+            Log::error($errorMessage);
+            throw new Exception(__('messages.currency_rate_update_error'));
         }
     }
 

@@ -26,7 +26,8 @@ class CurrencyConverter
         $rates = $this->getRates();
 
         if (!isset($rates[$toCurrency])) {
-            Log::warning("Currency $toCurrency not found in rates.");
+            Log::warning(__('messages.currency_not_found', ['currency' => $toCurrency]));
+
             return null;
         }
 

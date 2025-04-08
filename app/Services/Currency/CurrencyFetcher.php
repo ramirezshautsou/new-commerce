@@ -20,12 +20,12 @@ class CurrencyFetcher
             ->get(env('RATES_URL'));
 
         if ($response->failed()) {
-            throw new ConnectionException('Request failed: ' . $response->status());
+            throw new ConnectionException(__('messages.request_failed', ['status' => $response->status()]));
         }
 
         $xml = simplexml_load_string($response->body());
         if ($xml === false) {
-            throw new Exception('Invalid XML response');
+            throw new Exception(__('messages.invalid_xml'));
         }
 
         return json_decode(json_encode($xml), true);

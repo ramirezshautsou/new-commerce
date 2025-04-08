@@ -60,7 +60,7 @@ class CategoryController extends Controller
             ->create($request->validated());
 
         return redirect(route('categories.index'))
-            ->with('success', __('messages.created_success', [
+            ->with('success', __('messages.create_success', [
                 'name' => __('entities.category'),
             ]));
     }
@@ -90,7 +90,7 @@ class CategoryController extends Controller
             ->updateCategory($request, $categoryId);
 
         return redirect(route('categories.index'))
-            ->with('success', __('messages.updated_success', [
+            ->with('success', __('messages.update_success', [
                 'name' => __('entities.category'),
             ]));
     }
@@ -106,7 +106,7 @@ class CategoryController extends Controller
             ->deleteCategory($categoryId);
 
         return redirect(route('categories.index'))
-            ->with('success', __('messages.deleted_success', [
+            ->with('success', __('messages.delete_success', [
                 'name' => __('entities.category'),
             ]));
     }

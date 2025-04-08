@@ -62,7 +62,7 @@ class ListenQueue extends Command
             }
 
         } catch (Exception $e) {
-            $this->error('Error handling RabbitMQ message: ' . $e->getMessage());
+            $this->error(__('messages.rabbitmq_handle_error', ['message' => $e->getMessage()]));
         } finally {
             $this->cleanup();
         }
@@ -78,7 +78,7 @@ class ListenQueue extends Command
         try {
             $this->exportProcessor->handle($csvData);
         } catch (Throwable $e) {
-            $this->error('Error processing message: ' . $e->getMessage());
+            $this->error(__('messages.rabbitmq_process_error', ['message' => $e->getMessage()]));
         }
     }
 
@@ -90,7 +90,7 @@ class ListenQueue extends Command
         try {
             $this->rabbitMqConnector->close();
         } catch (Exception $e) {
-            $this->error('Error during cleanup: ' . $e->getMessage());
+            $this->error(__('messages.rabbitmq_cleanup_error', ['message' => $e->getMessage()]));
         }
     }
 }
