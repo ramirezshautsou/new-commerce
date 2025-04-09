@@ -5,6 +5,7 @@ namespace App\Repositories\Product;
 use App\Models\Producer;
 use App\Repositories\Product\Interfaces\ProducerRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProducerRepository implements ProducerRepositoryInterface
 {
@@ -16,11 +17,30 @@ class ProducerRepository implements ProducerRepositoryInterface
     ) {}
 
     /**
+     * @param int|null $limit
+     *
      * @return Collection
      */
-    public function getAll(): Collection
+    public function getAll(?int $limit = null): Collection
     {
-        return $this->model->all();
+        $query = $this->model->newQuery();
+
+        if ($limit !== null) {
+            $query->limit($limit);
+        }
+
+        return $query->get();
+    }
+
+    /**
+     * @param int $limitPerPage
+     *
+     * @return LengthAwarePaginator
+     */
+    public function paginate(int $limitPerPage): LengthAwarePaginator
+    {
+        return $this->model->newQuery()
+            ->paginate($limitPerPage);
     }
 
     /**
@@ -30,7 +50,8 @@ class ProducerRepository implements ProducerRepositoryInterface
      */
     public function findById(int $producerId): Producer
     {
-        return $this->model->newQuery()->findOrFail($producerId);
+        return $this->model->newQuery()
+            ->findOrFail($producerId);
     }
 
     /**
@@ -38,9 +59,11 @@ class ProducerRepository implements ProducerRepositoryInterface
      *
      * @return Producer
      */
-    public function getProductByProducer(int $producerId): Producer
+    public function findProducerWithProducts(int $producerId): Producer
     {
-        return $this->model->with('products')->findOrFail($producerId);
+        return $this->model->newQuery()
+            ->with('products')
+            ->findOrFail($producerId);
     }
 
     /**
@@ -61,7 +84,8 @@ class ProducerRepository implements ProducerRepositoryInterface
      */
     public function update(int $id, array $data): Producer
     {
-        $producer = $this->model->newQuery()->findOrFail($id);
+        $producer = $this->model->newQuery()
+            ->findOrFail($id);
         $producer->update($data);
 
         return $producer;
@@ -74,11 +98,8 @@ class ProducerRepository implements ProducerRepositoryInterface
      */
     public function delete(int $id): bool
     {
-        $producer = $this->model->newQuery()->find($id);
-        if ($producer) {
-            return $producer->delete();
-        }
-
-        return false;
+        return (bool) $this->model->newQuery()
+            ->find($id)
+            ?->delete();
     }
 }

@@ -16,11 +16,19 @@ class UserRoleRepository implements UserRoleRepositoryInterface
     ) {}
 
     /**
+     * @param int|null $limit
+     *
      * @return Collection
      */
-    public function getAll(): Collection
+    public function getAll(?int $limit = null): Collection
     {
-        return $this->model->all();
+        $query = $this->model->newQuery();
+
+        if ($limit !== null) {
+            $query->limit($limit);
+        }
+
+        return $query->get();
     }
 
     /**
@@ -30,6 +38,7 @@ class UserRoleRepository implements UserRoleRepositoryInterface
      */
     public function findById(int $id): Role
     {
-        return $this->model->newQuery()->findOrFail($id);
+        return $this->model->newQuery()
+            ->findOrFail($id);
     }
 }

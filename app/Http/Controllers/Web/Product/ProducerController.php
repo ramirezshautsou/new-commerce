@@ -37,7 +37,7 @@ class ProducerController extends Controller
     {
         return view('producers.show', [
             'producer' => $this->producerRepository
-                ->getProductByProducer($producerId),
+                ->findProducerWithProducts($producerId),
         ]);
     }
 

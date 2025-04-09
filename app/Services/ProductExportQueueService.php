@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\Product\ProductRepository;
 use App\Services\RabbitMq\RabbitMqConnector;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProductExportQueueService
 {
@@ -40,11 +41,11 @@ class ProductExportQueueService
     }
 
     /**
-     * @param $products
+     * @param Collection $products
      *
      * @return string
      */
-    private function generateCsvData($products): string
+    private function generateCsvData(Collection $products): string
     {
         $csvData = self::CSV_COLUMNS;
         foreach ($products as $product) {

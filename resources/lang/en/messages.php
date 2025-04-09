@@ -80,5 +80,6 @@ return [
     'export_products_failed' => 'Export products job failed',
 
     'download_url_generated' => 'The download URL for the file is: :url',
+    'target_date_required_with_price' => 'Target date is required with the price of the product.',
 ];
 

@@ -18,5 +18,6 @@ return [
     'status' => 'Status',
     'id' => 'ID',
     'actions' => 'Actions',
+    'export_subject' => 'Export mail subject',
 ];
 

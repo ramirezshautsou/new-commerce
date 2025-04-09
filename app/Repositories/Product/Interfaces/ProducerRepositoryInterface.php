@@ -24,7 +24,7 @@ interface ProducerRepositoryInterface
      *
      * @return Producer
      */
-    public function getProductByProducer(int $producerId): Producer;
+    public function findProducerWithProducts(int $producerId): Producer;
 
     /**
      * @param array $data

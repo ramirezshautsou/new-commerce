@@ -47,7 +47,6 @@ class AppServiceProvider extends ServiceProvider
             $this->app->bind($interface, $implementation);
         }
 
-
         View::composer([
             'products.create',
             'products.edit',
@@ -83,13 +82,13 @@ class AppServiceProvider extends ServiceProvider
             return new S3Client([
                 'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
                 'version' => 'latest',
-                'endpoint' => 'http://host.docker.internal:4566', //
-                'use_path_style_endpoint' => true,
+                'endpoint' => env('AWS_ENDPOINT', 'http://host.docker.internal:4566'),
+                'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', 'false'),
                 'credentials' => [
-                    'key' => 'test',
-                    'secret' => 'test',
+                    'key' => env('AWS_ACCESS_KEY_ID', 'nobody'),
+                    'secret' => env('AWS_SECRET_ACCESS_KEY', 'knows'),
                 ],
-                'debug' => true,
+                'debug' => env('AWS_DEBUG', false),
             ]);
         });
 

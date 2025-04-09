@@ -94,7 +94,7 @@ class UserController extends Controller
     public function update(UserRequest $request, int $userId): RedirectResponse
     {
         $this->userService
-            ->updateUser($request->validated(), $userId);
+            ->updateUser($request, $userId);
 
         return redirect(route('admin.users.index'))
             ->with('success', __('messages.update_success', [

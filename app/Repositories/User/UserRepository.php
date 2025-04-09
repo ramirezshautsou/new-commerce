@@ -25,7 +25,9 @@ class UserRepository implements UserRepositoryInterface
      */
     public function paginate(int $limitPerPage): LengthAwarePaginator
     {
-        return User::query()->with('role')->paginate($limitPerPage);
+        return $this->model->newQuery()
+            ->with('role')
+            ->paginate($limitPerPage);
     }
 
     /**
@@ -55,11 +57,19 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param int|null $limit
+     *
      * @return Collection
      */
-    public function getAll(): Collection
+    public function getAll(?int $limit = null): Collection
     {
-        return $this->model->all();
+        $query = $this->model->newQuery();
+
+        if ($limit !== null) {
+            $query->limit($limit);
+        }
+
+        return $query->get();
     }
 
     /**
@@ -69,7 +79,8 @@ class UserRepository implements UserRepositoryInterface
      */
     public function findById(int $id): User
     {
-        return $this->model->newQuery()->findOrFail($id);
+        return $this->model->newQuery()
+            ->findOrFail($id);
     }
 
     /**
@@ -79,7 +90,8 @@ class UserRepository implements UserRepositoryInterface
      */
     public function create(array $data): User
     {
-        return $this->model->newQuery()->create($data);
+        return $this->model->newQuery()
+            ->create($data);
     }
 
     /**
@@ -90,7 +102,8 @@ class UserRepository implements UserRepositoryInterface
      */
     public function update(int $id, array $data): User
     {
-        $user = $this->model->newQuery()->findOrFail($id);
+        $user = $this->model->newQuery()
+            ->findOrFail($id);
         $user->update($data);
 
         return $user;
@@ -103,11 +116,8 @@ class UserRepository implements UserRepositoryInterface
      */
     public function delete(int $id): bool
     {
-        $user = $this->model->newQuery()->find($id);
-        if ($user) {
-            return $user->delete();
-        }
-
-        return false;
+        return (bool) $this->model->newQuery()
+            ->find($id)
+            ?->delete();
     }
 }

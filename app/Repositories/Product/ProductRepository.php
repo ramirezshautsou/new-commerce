@@ -24,11 +24,19 @@ class ProductRepository implements ProductRepositoryInterface
     ) {}
 
     /**
+     * @param int|null $limit
+     *
      * @return Collection
      */
-    public function getAll(): Collection
+    public function getAll(?int $limit = null): Collection
     {
-        return $this->model->all();
+        $query = $this->model->newQuery();
+
+        if ($limit !== null) {
+            $query->limit($limit);
+        }
+
+        return $query->get();
     }
 
     /**
@@ -37,7 +45,8 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function findById(int $id): Product
     {
-        return $this->model->newQuery()->findOrFail($id);
+        return $this->model->newQuery()
+            ->findOrFail($id);
     }
 
     /**
@@ -47,7 +56,9 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function paginate(int $limitPerPage): LengthAwarePaginator
     {
-        return $this->model->with('category', 'producer')->paginate($limitPerPage);
+        return $this->model->newQuery()
+            ->with('category', 'producer')
+            ->paginate($limitPerPage);
     }
 
     /**
@@ -80,7 +91,8 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function create(array $data): Product
     {
-        return $this->model->newQuery()->create($data);
+        return $this->model->newQuery()
+            ->create($data);
     }
 
     /**
@@ -93,6 +105,7 @@ class ProductRepository implements ProductRepositoryInterface
     {
         $product = $this->findById($id);
         $product->update($data);
+
         return $product;
     }
 
@@ -102,7 +115,9 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function delete(int $id): bool
     {
-        return $this->model->destroy($id) > 0;
+        return (bool) $this->model->newQuery()
+            ->find($id)
+            ?->delete();
     }
 
     /**
@@ -112,6 +127,8 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function price(int $id): float
     {
-        return $this->model->newQuery()->findOrFail($id)->price;
+        return $this->model->newQuery()
+            ->find($id)
+            ->price;
     }
 }

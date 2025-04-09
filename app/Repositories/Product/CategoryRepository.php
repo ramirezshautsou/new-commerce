@@ -5,6 +5,7 @@ namespace App\Repositories\Product;
 use App\Models\Category;
 use App\Repositories\Product\Interfaces\CategoryRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
@@ -31,15 +32,36 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function getProductsByCategory(int $categoryId): Category
     {
-        return $this->model->newQuery()->with('products')->findOrFail($categoryId);
+        return $this->model->newQuery()
+            ->with('products')
+            ->findOrFail($categoryId);
     }
 
     /**
+     * @param int|null $limit
+     *
      * @return Collection
      */
-    public function getAll(): Collection
+    public function getAll(?int $limit = null): Collection
     {
-        return $this->model->all();
+        $query = $this->model->newQuery();
+
+        if ($limit !== null) {
+            $query->limit($limit);
+        }
+
+        return $query->get();
+    }
+
+    /**
+     * @param int $limitPerPage
+     *
+     * @return LengthAwarePaginator
+     */
+    public function paginate(int $limitPerPage): LengthAwarePaginator
+    {
+        return $this->model->newQuery()
+            ->paginate($limitPerPage);
     }
 
     /**
@@ -49,7 +71,8 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function create(array $data): Category
     {
-        return $this->model->newQuery()->create($data);
+        return $this->model->newQuery()
+            ->create($data);
     }
 
     /**
@@ -60,7 +83,8 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function update(int $id, array $data): Category
     {
-        $category = $this->model->newQuery()->findOrFail($id);
+        $category = $this->model->newQuery()
+            ->findOrFail($id);
         $category->update($data);
 
         return $category;
@@ -73,11 +97,8 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function delete(int $id): bool
     {
-        $category = $this->model->newQuery()->find($id);
-        if ($category) {
-            return $category->delete();
-        }
-
-        return false;
+        return (bool) $this->model->newQuery()
+            ->find($id)
+            ?->delete();
     }
 }
