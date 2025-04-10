@@ -41,6 +41,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     /**
      * @param int $id
+     *
      * @return Product
      */
     public function findById(int $id): Product
@@ -111,6 +112,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     /**
      * @param int $id
+     *
      * @return bool
      */
     public function delete(int $id): bool
@@ -128,7 +130,7 @@ class ProductRepository implements ProductRepositoryInterface
     public function price(int $id): float
     {
         return $this->model->newQuery()
-            ->find($id)
-            ->price;
+            ->where('id', $id)
+            ->value('price');
     }
 }

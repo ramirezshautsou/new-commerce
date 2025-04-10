@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Web\Product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Services\CurrencyRateService;
-use App\Services\ProductExportQueueService;
+use App\Services\ProductCsvExporterToQueue;
 use App\Services\ProductService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -35,12 +35,12 @@ class ProductController extends Controller
 
     /**
      * @param ProductService $productService
-     * @param ProductExportQueueService $productExportService
+     * @param ProductCsvExporterToQueue $productExportService
      * @param CurrencyRateService $currencyRateService
      */
     public function __construct(
         protected ProductService            $productService,
-        protected ProductExportQueueService $productExportService,
+        protected ProductCsvExporterToQueue $productExportService,
         protected CurrencyRateService       $currencyRateService,
     ) {}
 

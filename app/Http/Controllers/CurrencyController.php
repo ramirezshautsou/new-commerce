@@ -25,8 +25,13 @@ final class CurrencyController extends Controller
             $this->currencyRateService->updateRates();
 
             return back()->with('success', __('messages.currency_updated_success'));
-        } catch (Exception) {
+        } catch (Exception $e) {
+            logger()->error(__('messages.currency_update_exception_log', [
+                'message' => $e->getMessage(),
+            ]));
+
             return back()->with('error', __('messages.currency_updated_fail'));
+
         }
 
     }

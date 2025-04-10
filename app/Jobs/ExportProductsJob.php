@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Services\ProductExportQueueService;
+use App\Services\ProductCsvExporterToQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -14,10 +14,10 @@ class ExportProductsJob implements ShouldQueue
 {
     use Queueable, InteractsWithQueue, SerializesModels;
 
-    public function handle(ProductExportQueueService $productExportQueueService): void
+    public function handle(ProductCsvExporterToQueue $productCsvExporterToQueue): void
     {
         try {
-            $productExportQueueService->exportAndQueue();
+            $productCsvExporterToQueue->exportProductsToQueue();
         } catch (Throwable $e) {
             Log::error(__('jobs.export_products_failed'), ['error' => $e->getMessage()]);
             $this->fail($e);

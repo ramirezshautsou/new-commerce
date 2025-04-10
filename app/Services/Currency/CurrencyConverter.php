@@ -12,16 +12,27 @@ class CurrencyConverter
      */
     public function getRates(): array
     {
-        return CurrencyRate::all()->pluck('rate', 'currency')->toArray();
+        return cache()->remember('currency_rates_tmp', now()->addHour(), function () {
+            $rates = CurrencyRate::all()->pluck('rate', 'currency')->toArray();
+
+            if (empty($rates)) {
+                return null;
+            }
+
+            cache()->put('currency_rates', $rates, now()->addHour());
+
+            return $rates;
+        });
     }
 
     /**
      * @param float $amount
      * @param string $toCurrency
+     * @param int $precision
      *
      * @return float|null
      */
-    public function convert(float $amount, string $toCurrency): ?float
+    public function convert(float $amount, string $toCurrency, int $precision = 2): ?float
     {
         $rates = $this->getRates();
 
@@ -31,7 +42,7 @@ class CurrencyConverter
             return null;
         }
 
-        return round($amount / $rates[$toCurrency], 2);
+        return round($amount / $rates[$toCurrency], $precision);
     }
 
     /**

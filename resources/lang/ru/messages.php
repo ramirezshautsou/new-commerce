@@ -52,6 +52,7 @@ return [
 
     'currency_updated_success' => 'Курсы валют успешно обновлены!',
     'currency_updated_fail' => 'Не удалось обновить курсы валют. Повторите попытку позже.',
+    'currency_update_exception_log' => 'Ошибка обновления курсов валют: :message',
     'currency_not_found' => 'Валюта :currency не найдена в курсах.',
     'currency_rate_update_error' => 'Произошла ошибка при обновлении валютных курсов.',
 

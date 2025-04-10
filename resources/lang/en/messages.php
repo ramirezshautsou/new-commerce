@@ -52,6 +52,7 @@ return [
 
     'currency_updated_success' => 'Currency successfully updated!',
     'currency_updated_fail' => 'Currency Failed to update currency rates. Please try again later.',
+    'currency_update_exception_log' => 'Update error :message',
     'currency_not_found' => 'Currency :currency not found in rates.',
     'currency_rate_update_error' => 'An error occurred while updating currency rates.',
 

@@ -71,7 +71,13 @@ class RabbitMqConnector implements RabbitMqPublisherInterface
         try {
             $this->connect();
 
-            $this->channel->queue_declare($queue, false, true, false, false);
+            $this->channel->queue_declare(
+                $queue,
+                false,
+                true,
+                false,
+                false,
+            );
 
             $this->channel->basic_publish(
                 new AMQPMessage($message),

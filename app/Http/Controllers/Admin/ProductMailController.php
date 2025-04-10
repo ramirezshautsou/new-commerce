@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\ProductExportQueueService;
+use App\Services\ProductCsvExporterToQueue;
 use Illuminate\Http\RedirectResponse;
 use Throwable;
 
 class ProductMailController extends Controller
 {
     /**
-     * @param ProductExportQueueService $productExportQueueService
+     * @param ProductCsvExporterToQueue $productCsvExporterToQueue
      */
     public function __construct(
-        private readonly ProductExportQueueService $productExportQueueService,
+        private readonly ProductCsvExporterToQueue $productCsvExporterToQueue,
     ) {}
 
     /**
@@ -22,7 +22,7 @@ class ProductMailController extends Controller
     public function export(): RedirectResponse
     {
         try {
-            $this->productExportQueueService->exportAndQueue();
+            $this->productCsvExporterToQueue->exportProductsToQueue();
 
             return back()->with('success', __('messages.export_success'));
         } catch (Throwable  $exception) {
