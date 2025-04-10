@@ -8,6 +8,7 @@ use App\Repositories\Service\Interfaces\ServiceRepositoryInterface;
 use App\Services\ServiceService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class ServiceController extends Controller
@@ -48,9 +49,7 @@ class ServiceController extends Controller
             ->create($request->validated());
 
         return redirect(route('services.index'))
-            ->with('success', __('messages.create_success', [
-                'name' => __('entities.service'),
-            ]));
+            ->with('success', $this->successMessage('create'));
     }
 
     /**
@@ -91,9 +90,7 @@ class ServiceController extends Controller
             ->updateService($request, $serviceId);
 
         return redirect(route('services.index'))
-            ->with('success', __('messages.update_success', [
-                'name' => __('entities.service'),
-            ]));
+            ->with('success', $this->successMessage('update'));
     }
 
     /**
@@ -108,11 +105,21 @@ class ServiceController extends Controller
                 ->deleteService($serviceId);
 
             return redirect(route('services.index'))
-                ->with('success', __('messages.delete_success', [
-                    'name' => __('entities.service'),
-                ]));
-        } catch (Exception) {
+                ->with('success', $this->successMessage('delete'));
+        } catch (Exception $e) {
+            Log::error(__('messages.delete_failed', ['error' => $e->getMessage()]));
+
             return back()->withErrors(__('messages.delete_failed'));
         }
+    }
+
+    /**
+     * @param string $action
+     *
+     * @return string
+     */
+    protected function successMessage(string $action): string
+    {
+        return __('messages.' . $action . '_success', ['name' => __('entities.service')]);
     }
 }

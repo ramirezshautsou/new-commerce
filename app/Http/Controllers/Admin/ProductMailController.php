@@ -26,7 +26,9 @@ class ProductMailController extends Controller
 
             return back()->with('success', __('messages.export_success'));
         } catch (Throwable  $exception) {
-            return back()->with('error', __('messages.export_failed', ['error' => $exception->getMessage()]));
+            return back()->with('error', __('messages.export_failed', [
+                'error' => $exception->getMessage(),
+            ]));
         }
     }
 }

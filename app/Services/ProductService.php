@@ -69,10 +69,7 @@ class ProductService
      */
     public function updateProduct(int $productId, array $data): Product
     {
-        $product = $this->getProductById($productId);
-        $product->update($data);
-
-        return $product;
+        return $this->productRepository->update($productId, $data);
     }
 
     /**
@@ -82,8 +79,7 @@ class ProductService
      */
     public function deleteProduct(int $productId): void
     {
-        $product = $this->getProductById($productId);
-        $product->delete();
+        $this->productRepository->delete($productId);
     }
 
     /**

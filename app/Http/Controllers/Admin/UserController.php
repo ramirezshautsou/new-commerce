@@ -68,9 +68,7 @@ class UserController extends Controller
             ->create($request->validated());
 
         return redirect(route('admin.users.index'))
-            ->with('success', __('messages.create_success', [
-                'name' => __('entities.user'),
-            ]));
+            ->with('success', $this->successMessage('create'));
     }
 
     /**
@@ -97,9 +95,7 @@ class UserController extends Controller
             ->updateUser($request, $userId);
 
         return redirect(route('admin.users.index'))
-            ->with('success', __('messages.update_success', [
-                'name' => __('entities.user'),
-            ]));
+            ->with('success', $this->successMessage('update'));
     }
 
     /**
@@ -113,9 +109,7 @@ class UserController extends Controller
             ->deleteUser($userId);
 
         return redirect(route('admin.users.index'))
-            ->with('success', __('messages.delete_success', [
-                'name' => __('entities.user'),
-            ]));
+            ->with('success', $this->successMessage('delete'));
     }
 
     /**
@@ -127,5 +121,15 @@ class UserController extends Controller
     {
         return $this->userRepository->findById($userId)
             ?? abort(404, __('messages.user_not_found'));
+    }
+
+    /**
+     * @param string $action
+     *
+     * @return string
+     */
+    protected function successMessage(string $action): string
+    {
+        return __('messages.' . $action . '_success', ['name' => __('entities.user')]);
     }
 }

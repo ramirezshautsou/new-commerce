@@ -34,6 +34,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->registerBindings();
+        $this->registerViewComposers();
+        $this->registerExternalServices();
+    }
+
+    /**
+     * @return void
+     */
+    private function registerBindings(): void
+    {
         $bindings = [
             ProductRepositoryInterface::class => ProductRepository::class,
             CategoryRepositoryInterface::class => CategoryRepository::class,
@@ -46,7 +56,13 @@ class AppServiceProvider extends ServiceProvider
         foreach ($bindings as $interface => $implementation) {
             $this->app->bind($interface, $implementation);
         }
+    }
 
+    /**
+     * @return void
+     */
+    private function registerViewComposers(): void
+    {
         View::composer([
             'products.create',
             'products.edit',
@@ -77,27 +93,33 @@ class AppServiceProvider extends ServiceProvider
             'admin.users.index',
             'admin.users.edit',
         ], UserComposer::class);
+    }
 
+    /**
+     * @return void
+     */
+    private function registerExternalServices(): void
+    {
         $this->app->singleton(S3Client::class, function () {
             return new S3Client([
-                'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+                'region' => env('AWS_DEFAULT_REGION'),
                 'version' => 'latest',
-                'endpoint' => env('AWS_ENDPOINT', 'http://host.docker.internal:4566'),
-                'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', 'false'),
+                'endpoint' => env('AWS_ENDPOINT'),
+                'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT'),
                 'credentials' => [
-                    'key' => env('AWS_ACCESS_KEY_ID', 'nobody'),
-                    'secret' => env('AWS_SECRET_ACCESS_KEY', 'knows'),
+                    'key' => env('AWS_ACCESS_KEY_ID'),
+                    'secret' => env('AWS_SECRET_ACCESS_KEY'),
                 ],
-                'debug' => env('AWS_DEBUG', false),
+                'debug' => env('AWS_DEBUG'),
             ]);
         });
 
         $this->app->singleton(AMQPStreamConnection::class, function () {
             return new AMQPStreamConnection(
-                config('rabbitmq.connections.rabbitmq.host', 'rabbitmq'),
-                config('queue.connections.rabbitmq.port', 5672),
-                config('queue.connections.rabbitmq.user', 'guest'),
-                config('queue.connections.rabbitmq.pass', 'guest'),
+                config('rabbitmq.connections.rabbitmq.host'),
+                config('queue.connections.rabbitmq.port'),
+                config('queue.connections.rabbitmq.user'),
+                config('queue.connections.rabbitmq.pass'),
             );
         });
     }

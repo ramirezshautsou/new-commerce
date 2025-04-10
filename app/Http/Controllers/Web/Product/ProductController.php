@@ -34,6 +34,11 @@ class ProductController extends Controller
     private const DEFAULT_SORT_DIRECTION = 'asc';
 
     /**
+     * @const CURRENCY_KEYS
+     */
+    private const CURRENCY_KEYS = ['USD', 'EUR', 'RUB'];
+
+    /**
      * @param ProductService $productService
      * @param ProductCsvExporterToQueue $productExportService
      * @param CurrencyRateService $currencyRateService
@@ -80,7 +85,8 @@ class ProductController extends Controller
                 ->getProductById($productId),
             'convertedPrices' => $this->currencyRateService
                 ->getConvertedPrices(
-                    $price, ['USD', 'EUR', 'RUB']
+                    $price,
+                    self::CURRENCY_KEYS,
                 )]);
     }
 
@@ -103,9 +109,7 @@ class ProductController extends Controller
             ->createProduct($request->validated());
 
         return redirect(route('products.index'))
-            ->with('success', __('messages.create_success', [
-                'name' => __('entities.product'),
-            ]));
+            ->with('success', $this->successMessage('create'));
     }
 
     /**
@@ -136,9 +140,7 @@ class ProductController extends Controller
             );
 
         return redirect(route('products.index'))
-            ->with('success', __('messages.update_success', [
-                'name' => __('entities.product'),
-            ]));
+            ->with('success', $this->successMessage('update'));
     }
 
     /**
@@ -152,8 +154,16 @@ class ProductController extends Controller
             ->deleteProduct($productId);
 
         return redirect(route('products.index'))
-            ->with('success', __('messages.delete_success', [
-                'name' => __('entities.product'),
-            ]));
+            ->with('success', $this->successMessage('delete'));
+    }
+
+    /**
+     * @param string $action
+     *
+     * @return string
+     */
+    protected function successMessage(string $action): string
+    {
+        return __('messages.' . $action . '_success', ['name' => __('entities.product')]);
     }
 }

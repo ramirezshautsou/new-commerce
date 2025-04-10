@@ -74,6 +74,9 @@ return [
     'rabbitmq_process_error' => 'Ошибка при обработке сообщения: :message',
     'rabbitmq_cleanup_error' => 'Ошибка при очистке: :message',
 
+    'queue_listening' => 'Ожидание очереди ":queue"...',
+    'processing_duration' => 'Время обработки: :time сек.',
+
     'export_success' => 'Каталог товаров успешно экспортирован и отправлен в очередь.',
     'export_subject' => 'Экспорт товаров завершен',
     'export_failed' => 'Ошибка обработки экспорта: :error',

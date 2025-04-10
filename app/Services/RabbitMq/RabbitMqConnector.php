@@ -30,15 +30,17 @@ class RabbitMqConnector implements RabbitMqPublisherInterface
         if (!$this->connection) {
             try {
                 $this->connection = new AMQPStreamConnection(
-                    config('queue.rabbitmq.host', 'rabbitmq'),
-                    config('queue.rabbitmq.port', 5672),
-                    config('queue.rabbitmq.user', 'guest'),
-                    config('queue.rabbitmq.password', 'guest')
+                    config('queue.connections.rabbitmq.host'),
+                    config('queue.connections.rabbitmq.port'),
+                    config('queue.connections.rabbitmq.username'),
+                    config('queue.connections.rabbitmq.password')
                 );
 
                 $this->channel = $this->connection->channel();
             } catch (Exception $e) {
-                throw new Exception("RabbitMQ connection failed: " . $e->getMessage(), $e->getCode(), $e);
+                throw new Exception(__('messages.rabbitmq_connection_failed', [
+                    'error' => $e->getMessage()
+                ]), $e->getCode(), $e);
             }
         }
         return $this->connection;
@@ -82,11 +84,12 @@ class RabbitMqConnector implements RabbitMqPublisherInterface
             $this->channel->basic_publish(
                 new AMQPMessage($message),
                 '',
-                $queue
+                $queue,
             );
         } catch (Exception $e) {
             $errorMessage = __('messages.rabbitmq_publish_failed', ['error' => $e->getMessage()]);
-            throw new Exception($errorMessage, $e->getCode(), $e);        }
+            throw new Exception($errorMessage, $e->getCode(), $e);
+        }
     }
 
     /**

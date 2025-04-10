@@ -12,6 +12,16 @@ use Throwable;
 class ExportProcessor
 {
     /**
+     * @const FILE_NAME
+     */
+    private const FILE_NAME = 'products-';
+
+    /**
+     * @const FILE_EXTENSION
+     */
+    private const FILE_EXTENSION = '.csv';
+
+    /**
      * @param S3Client $s3Client
      *
      * @param S3DownloadUrlService $urlService
@@ -45,7 +55,7 @@ class ExportProcessor
      */
     private function uploadToS3(string $csvData): string
     {
-        $fileName = 'products-' . time() . '.csv';
+        $fileName = self::FILE_NAME . time() . self::FILE_EXTENSION;
 
         $this->s3Client->putObject([
             'Bucket' => config('filesystems.disks.s3.bucket'),

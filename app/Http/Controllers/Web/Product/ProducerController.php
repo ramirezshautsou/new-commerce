@@ -60,9 +60,7 @@ class ProducerController extends Controller
             ->create($request->validated());
 
         return redirect(route('producers.index'))
-            ->with('success', __('messages.create_success', [
-                'name' => __('entities.producer'),
-            ]));
+            ->with('success', $this->successMessage('create'));
     }
 
     /**
@@ -90,9 +88,7 @@ class ProducerController extends Controller
             ->updateProducer($request, $producerId);
 
         return redirect(route('producers.index'))
-            ->with('success', __('messages.update_success', [
-                'name' => __('entities.producer'),
-            ]));
+            ->with('success', $this->successMessage('update'));
     }
 
     /**
@@ -106,8 +102,16 @@ class ProducerController extends Controller
             ->deleteProducer($producerId);
 
         return redirect(route('producers.index'))
-            ->with('success', __('messages.delete_success', [
-                'name' => __('entities.producer'),
-            ]));
+            ->with('success', $this->successMessage('delete'));
+    }
+
+    /**
+     * @param string $action
+     *
+     * @return string
+     */
+    protected function successMessage(string $action): string
+    {
+        return __('messages.' . $action . '_success', ['name' => __('entities.producer')]);
     }
 }

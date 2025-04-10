@@ -45,6 +45,8 @@ class ListenQueue extends Command
         try {
             $channel = $this->rabbitMqConnector->getChannel();
 
+            $this->info(__('messages.queue_listening', ['queue' => self::LISTEN_QUEUE_NAME]));
+
             $channel->basic_consume(
                 self::LISTEN_QUEUE_NAME,
                 '',
@@ -76,7 +78,12 @@ class ListenQueue extends Command
     private function processMessage(string $csvData): void
     {
         try {
+            $start = microtime(true);
+
             $this->exportProcessor->handle($csvData);
+
+            $duration = round(microtime(true) - $start, 4);
+            $this->info(__('messages.processing_duration', ['time' => $duration]));
         } catch (Throwable $e) {
             $this->error(__('messages.rabbitmq_process_error', ['message' => $e->getMessage()]));
         }

@@ -6,7 +6,7 @@ return [
     'delete_success' => ':name successfully deleted!',
     'create_failed' => 'Failed to create :name.',
     'update_failed' => 'Failed to update :name.',
-    'delete_failed' => ':name failed to delete!',
+    'delete_failed' => ':name failed to delete! Error: :error',
 
     'user_not_found' => 'User not found.',
     'not_found' => ':name not found.',
@@ -73,6 +73,9 @@ return [
     'rabbitmq_handle_error' => 'Error handling RabbitMQ message: :message',
     'rabbitmq_process_error' => 'Error processing message: :message',
     'rabbitmq_cleanup_error' => 'Error during cleanup: :message',
+
+    'queue_listening' => 'Listening to queue ":queue"...',
+    'processing_duration' => 'Completed. Processing time: :time sec.',
 
     'export_success' => 'Product catalog has been successfully exported and queued.',
     'export_subject' => 'Your product export is complete',
